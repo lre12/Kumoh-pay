@@ -11,25 +11,25 @@ app.get('/api/customers', (req, res) => {
             'id': 1,
             'image': 'https://placeimg.com/64/64/1',
             'name': '홍길동',
-            'birthday': '961222',
+            'major': '컴퓨터공학과',
             'gender': '남자',
-            'job': '대학생'
+            'charge': '0'
         },
         {
             'id': 2,
             'image': 'https://placeimg.com/64/64/2',
             'name': '손우진',
-            'birthday': '951105',
+            'major': '컴퓨터소프트웨어학과',
             'gender': '남자',
-            'job': '프로그래머'
+            'charge': '100000000'
         },
         {
             'id': 3,
             'image': 'https://placeimg.com/64/64/3',
             'name': '이순신',
-            'birthday': '961127',
+            'major': '전자공학과',
             'gender': '남자',
-            'job': '디자이너'
+            'charge': '2000'
         }
     ]);
 });

@@ -23,7 +23,7 @@ const styles = theme => ({
 class App extends Component {
 
   state = {
-    customers: ''
+    customers: null
   }
 
   componentDidMount() {
@@ -45,18 +45,18 @@ class App extends Component {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell>번호</TableCell>
+              <TableCell>학번</TableCell>
               <TableCell>이미지</TableCell>
               <TableCell>이름</TableCell>
-              <TableCell>생년월일</TableCell>
+              <TableCell>학과</TableCell>
               <TableCell>성별</TableCell>
-              <TableCell>직업</TableCell>
+              <TableCell>잔액</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {this.state.customers ? this.state.customers.map(c => {
-              return <Customer key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
-            }) : ''}
+              return <Customer key={c.id} id={c.id} image={c.image} name={c.name} major={c.major} gender={c.gender} charge={c.charge} />
+            }) : null}
           </TableBody>
         </Table>
       </Paper>
@@ -64,4 +64,4 @@ class App extends Component {
   }
 }
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(App)
