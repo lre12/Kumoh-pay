@@ -14,7 +14,9 @@
  kumoh-pay(소문자) 폴더에서 npm start
 
 + version
+
   npm : 6.14.5
+
   node : v12.18.2
 
 + readme 작성시 마크다운 규격 준수하기
