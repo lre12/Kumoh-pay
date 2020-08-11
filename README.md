@@ -2,22 +2,22 @@
 
 ### 팀원 참고사항
 + javascript 코딩 스타일 준수하기
- - https://velog.io/@cada/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%BD%94%EB%94%A9-%EB%B0%8F-%EB%84%A4%EC%9D%B4%EB%B0%8D-%EC%BB%A8%EB%B2%A4%EC%85%98-1%ED%8E%B8
+  https://velog.io/@cada/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%BD%94%EB%94%A9-%EB%B0%8F-%EB%84%A4%EC%9D%B4%EB%B0%8D-%EC%BB%A8%EB%B2%A4%EC%85%98-1%ED%8E%B8
  
 
- - https://velog.io/@cada/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%8A%A4%ED%83%80%EC%9D%BC-%EA%B0%80%EC%9D%B4%EB%93%9C-%EB%84%A4%EC%9D%B4%EB%B0%8D-%EC%BB%A8%EB%B2%A4%EC%85%98-%ED%8E%B8
+  https://velog.io/@cada/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%8A%A4%ED%83%80%EC%9D%BC-%EA%B0%80%EC%9D%B4%EB%93%9C-%EB%84%A4%EC%9D%B4%EB%B0%8D-%EC%BB%A8%EB%B2%A4%EC%85%98-%ED%8E%B8
  
  - 원본 : https://google.github.io/styleguide/jsguide.html
 
 + 실행법
- - kumoh-pay(소문자) 폴더에서 npm start
+ kumoh-pay(소문자) 폴더에서 npm start
 
 + version
- - npm : 6.14.5
- - node : v12.18.2
+  npm : 6.14.5
+  node : v12.18.2
 
 + readme 작성시 마크다운 규격 준수하기
- - https://gist.github.com/ihoneymon/652be052a0727ad59601
+  https://gist.github.com/ihoneymon/652be052a0727ad59601
 
 ## 금오페이란?
  1. 문제 정의
