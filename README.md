@@ -10,7 +10,15 @@
  - 원본 : https://google.github.io/styleguide/jsguide.html
 
 + 실행법
- - kumoh-pay(소문자) 폴더에서 npm start
+ - root폴더 = kumoh-pay(소문자) 폴더
+ - node 설치
+ - npm install @material-ui/core
+ - npm i @material-ui/icons
+ - npm install -S mysql
+ - npm install axios
+ - npm install --save multer
+ - root에 database.json 추가(gitignore상태)
+ - root에서 npm start
 
 + version
  - npm : 6.14.5
