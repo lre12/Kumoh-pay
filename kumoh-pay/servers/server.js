@@ -32,7 +32,7 @@ app.get('/api/customers', (req, res) => {
 });
 
 app.post('/api/customers', (req, res) => {
-    let sql = 'INSERT INTO CUSTOMER (id, name, major, gender, charge) VALUES (?, ?, ?, ?, ?, now(), 0)'
+    let sql = 'INSERT INTO CUSTOMER (id, name, major, gender, charge, createdDate, isDeleted) VALUES (?, ?, ?, ?, ?, now(), 0)'
     let id = req.body.id
     let name = req.body.name
     let major = req.body.major

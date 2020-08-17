@@ -15,7 +15,7 @@ const styles = theme => ({
 });
 
 class CustomerAdd extends React.Component {
-    
+
     constructor(props) {
         super(props);
         this.state = {
@@ -34,13 +34,26 @@ class CustomerAdd extends React.Component {
     }
 
     handleFormSubmit(e) {
-        console.log(this.state)
         e.preventDefault()
+
         this.addCustomer()
-            .then((response) => {
-                console.log(response.data);
-            })
-        window.location.reload();
+        
+        .then((response) => {
+        
+        console.log(response.data);
+        
+        this.props.stateRefresh();
+        
+        })
+        this.setState({
+            id: '',
+            userName: '',
+            major: '',
+            gender: '',
+            charge: ''
+        })
+
+
     }
 
     handleValueChange(e) {
@@ -81,10 +94,10 @@ class CustomerAdd extends React.Component {
         return (
             <div>
                 <Button variant="contained" color="primary" onClick={this.handleClickOpen}>
-                    고객 추가하기
+                    사용자 추가하기
                 </Button>
                 <Dialog open={this.state.open} onClose={this.handleClose}>
-                    <DialogTitle>고객 추가</DialogTitle>
+                    <DialogTitle>사용자 추가</DialogTitle>
                     <DialogContent>
                         <br />
                         <TextField label="학번" type="number" name="id" value={this.state.id} onChange={this.handleValueChange} /><br />
