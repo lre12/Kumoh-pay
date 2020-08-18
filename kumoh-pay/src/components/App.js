@@ -1,23 +1,24 @@
 import React, { Component } from 'react';
-import Customer from './Customer'
 import './App.css';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
-import CustomerAdd from './CustomerAdd';
 import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import CustomerView from './CustomerView';
+import SellerView from './SellerView';
+
 
 
 const styles = theme => ({
@@ -99,129 +100,50 @@ const styles = theme => ({
 
 
 class App extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      customers: '',
-      completed: 0,
-      searchKeyword: ''
-    }
-    this.stateRefresh = this.stateRefresh.bind(this);
-    this.handleValueChange = this.handleValueChange.bind(this);
-  }
-
-  handleValueChange(e) {
-    let nextState = {};
-    nextState[e.target.id] = e.target.value;
-    this.setState(nextState);
-  }
-
-  stateRefresh() {
-    this.setState({
-      customers: '',
-      completed: 0,
-      searchKeyword: ''
-    });
-    this.callApi()
-      .then(res => this.setState({ customers: res }))
-      .catch(err => console.log(err));
-  }
-
-
-  componentDidMount() {
-    this.timer = setInterval(this.progress, 20);
-    this.callApi()
-      .then(res => this.setState({ customers: res }))
-      .catch(err => console.log(err));
-  }
-
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
-  callApi = async () => {
-    const response = await fetch('/api/customers');
-    const body = await response.json();
-    return body;
-  }
-
-  progress = () => {
-    const { completed } = this.state;
-    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
-  };
-
-
-
   render() {
-    const filteredComponents = (data) => {
-      data = data.filter((c) => {
-        return c.id.indexOf(this.state.searchKeyword) > -1;
-      });
-      return data.map((c) => {
-        return <Customer stateRefresh={this.stateRefresh} key={c.id} id={c.id} name={c.name} major={c.major} gender={c.gender} charge={c.charge} />
-      });
-    }
     const { classes } = this.props;
-    const cellList = ["학번", "이름", "학과", "성별", "잔액"]
     return (
-      <div className={classes.root}>
+      <Router>
+        
+        <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
             <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
-              <MenuIcon />
+              
+              <PopupState variant="popover" popupId="demo-popup-menu">
+      {(popupState) => (
+        <React.Fragment>
+          <MenuIcon variant="contained"  {...bindTrigger(popupState)}></MenuIcon>
+          <Menu {...bindMenu(popupState)}>
+            <MenuItem onClick={popupState.close}><Link to="/">학생 관리</Link></MenuItem>
+            <MenuItem onClick={popupState.close}><Link to="/seller">판매자 관리</Link></MenuItem>
+          </Menu>
+        </React.Fragment>
+      )}
+    </PopupState>
             </IconButton>
             <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-              사용자 관리 시스템
-      </Typography>
+              금오페이 관리 시스템
+          </Typography>
             <div className={classes.grow} />
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="학번 검색"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                id="searchKeyword"
-                value={this.state.searchKeyword}
-                onChange={this.handleValueChange}
-              />
-            </div>
           </Toolbar>
         </AppBar>
-        <div className={classes.menu}>
-          <CustomerAdd stateRefresh={this.stateRefresh} />
+        
+        
+        <Switch>
+          <Route path="/seller">
+            <SellerView />
+          </Route>
+          <Route path="/">
+            <CustomerView />
+          </Route>
+        </Switch>
         </div>
-        <Paper className={classes.paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {cellList.map(c => {
-                  return <TableCell className={classes.tableHead}>{c}</TableCell>
-                })}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.customers ?
-                filteredComponents(this.state.customers) :
-                <TableRow>
-                  <TableCell colSpan="6" align="center">
-                    <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} />
-                  </TableCell>
-                </TableRow>
-              }
-            </TableBody>
-          </Table>
-        </Paper>
-      </div>
+      </Router>
+      
     );
   }
 }
-
 
 
 
