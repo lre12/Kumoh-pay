@@ -12,7 +12,6 @@ import { withStyles } from '@material-ui/core/styles';
 import CustomerAdd from './CustomerAdd';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Typography from '@material-ui/core/Typography';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 

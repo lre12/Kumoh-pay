@@ -24,6 +24,11 @@
  - npm : 6.14.5
  - node : v12.18.2
 
++ 포트
+ - 관리자(kumoh-pay) : 3000
+ - node 서버 : 3001
+ - 사용자(kumohpay-user) : 3002
+
 + readme 작성시 마크다운 규격 준수하기
  - https://gist.github.com/ihoneymon/652be052a0727ad59601
 
