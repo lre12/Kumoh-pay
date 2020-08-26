@@ -58,4 +58,40 @@ app.delete('/api/customers/:id', (req, res) => {
     )
 });
 
+app.get('/api/sellers', (req, res) => {
+    connection.query(
+        'SELECT * FROM SELLER WHERE isDeleted = 0',
+        (err, rows, fields) => {
+            res.send(rows);
+        }
+    )
+});
+
+app.post('/api/sellers', (req, res) => {
+    let sql = 'INSERT INTO SELLER (id, name, owner, phone, charge, createdDate, isDeleted) VALUES (?, ?, ?, ?, ?, now(), 0)'
+    let id = req.body.id
+    let name = req.body.name
+    let owner = req.body.owner
+    let phone = req.body.phone
+    let charge = req.body.charge
+    let params = [id, name, owner, phone, charge]
+    console.log(req.body)
+    console.log(params)
+    connection.query(sql, params,
+        (err, rows, fields) => {
+            res.send(rows)
+        }
+    )
+})
+
+app.delete('/api/sellers/:id', (req, res) => {
+    let sql = 'UPDATE SELLER SET isDeleted = 1 WHERE id = ?';
+    let params = [req.params.id];
+    connection.query(sql, params,
+        (err, rows, fields) => {
+            res.send(rows);
+        }
+    )
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`))

@@ -1,5 +1,5 @@
 import React from 'react'
-import Customer from './Customer'
+import Seller from './Seller'
 import './App.css';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
-import CustomerAdd from './CustomerAdd';
+import SellerAdd from './SellerAdd';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
@@ -94,8 +94,71 @@ const styles = theme => ({
 
 class SellerView extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            sellers: '',
+            completed: 0,
+            searchKeyword: ''
+        }
+        this.stateRefresh = this.stateRefresh.bind(this);
+        this.handleValueChange = this.handleValueChange.bind(this);
+    }
+
+    handleValueChange(e) {
+        let nextState = {};
+        nextState[e.target.id] = e.target.value;
+        this.setState(nextState);
+    }
+
+    stateRefresh() {
+        this.setState({
+            sellers: '',
+            completed: 0,
+            searchKeyword: ''
+        });
+        this.callApi()
+        .then(res => this.setState({ sellers: res }))
+        .catch(err => console.log(err));
+    }
+
+
+    componentDidMount() {
+        this.timer = setInterval(this.progress, 20);
+        this.callApi()
+        .then(res => this.setState({ sellers: res }))
+        .catch(err => console.log(err));
+    }
+
+
+    componentWillUnmount() {
+        clearInterval(this.timer);
+    }
+
+    callApi = async () => {
+        const response = await fetch('/api/sellers');
+        const body = await response.json();
+        return body;
+    }
+
+    progress = () => {
+        const { completed } = this.state;
+        this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+    };
+
     render() {
+
+        const filteredComponents = (data) => {
+            data = data.filter((c) => {
+                return c.id.indexOf(this.state.searchKeyword) > -1;
+            });
+            return data.map((c) => {
+                return <Seller stateRefresh={this.stateRefresh} key={c.id} id={c.id} name={c.name} owner={c.owner} phone={c.phone} charge={c.charge} />
+            });
+        }
         const { classes } = this.props;
+        const cellList = ["판매자코드", "이름", "사업자", "전화번호", "잔액"]
+
         return (
             <div>
                 <div className={classes.menu}>
@@ -113,12 +176,32 @@ class SellerView extends React.Component {
                                 input: classes.inputInput,
                             }}
                             id="searchKeyword"
+                            value={this.state.searchKeyword}
+                            onChange={this.handleValueChange}
                         />
                     </div>
-
+                    <SellerAdd stateRefresh={this.stateRefresh} />
                 </div>
                 <Paper className={classes.paper}>
-
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                {cellList.map(c => {
+                                    return <TableCell className={classes.tableHead}>{c}</TableCell>
+                                })}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {this.state.sellers ?
+                            filteredComponents(this.state.sellers) :
+                            <TableRow>
+                                <TableCell colSpan="6" align="center">
+                                    <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} />
+                                </TableCell>
+                            </TableRow>
+                            }
+                        </TableBody>
+                    </Table>
                 </Paper>
             </div>
         )
