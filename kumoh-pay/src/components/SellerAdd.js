@@ -94,10 +94,10 @@ class SellerAdd extends React.Component {
         return (
             <div>
                 <Button variant="contained" color="primary" onClick={this.handleClickOpen}>
-                    판매자 추가하기
+                    사용자 추가하기
                 </Button>
                 <Dialog open={this.state.open} onClose={this.handleClose}>
-                    <DialogTitle>판매자 추가</DialogTitle>
+                    <DialogTitle>사용자 추가</DialogTitle>
                     <DialogContent>
                         <br />
                         <TextField label="판매자코드" type="number" name="id" value={this.state.id} onChange={this.handleValueChange} /><br />
