@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
-import Divider from '@material-ui/core/Divider';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -63,9 +62,9 @@ export default function UpdateInfoView() {
 
   return (
     <Card className={classes.root}>
-      <CardContent  align="center">
-      <Typography className={classes.title} color="textSecondary" gutterBottom>
-        {bull}회원 정보 수정
+      <CardContent align="center">
+        <Typography className={classes.title} color="textSecondary" gutterBottom>
+          {bull}회원 정보 수정
         </Typography>
         <TextField
           label="With normal TextField"
@@ -119,12 +118,10 @@ export default function UpdateInfoView() {
         </FormControl>
       </CardContent>
       <CardActionArea>
-      <CardActions style={{justifyContent: 'center'}}> 
-      <Button  className={classes.button}>수정</Button>
-      </CardActions>
+        <CardActions style={{ justifyContent: 'center' }}>
+          <Button className={classes.button}>수정</Button>
+        </CardActions>
       </CardActionArea>
-
-      
     </Card>
   );
 }
