@@ -55,7 +55,7 @@ export default function MainView() {
         </Typography>
       </CardContent>
       <Divider />
-      <CardActions>
+      <CardActions style={{justifyContent: 'center'}}>
         <Button className={classes.button}>송금하기</Button>
       </CardActions>
     </Card>

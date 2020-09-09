@@ -78,7 +78,7 @@ export const secondaryListItems = (
         <EditIcon style={{ textDecoration: 'none',  color: 'black'}} />
       </ListItemIcon>
       <Link to="/update" style={{ textDecoration: 'none',  color: 'black'}}>
-      <ListItemText component={Link} to={'/update'} primary="회원 정보 수정" />
+      <ListItemText primary="회원 정보 수정" />
       </Link>
     </ListItem>
     <ListItem button>
