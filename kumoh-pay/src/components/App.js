@@ -1,151 +1,210 @@
-import React, { Component } from 'react';
-import './App.css';
-import { withStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
-import { fade } from '@material-ui/core/styles/colorManipulator';
-import Typography from '@material-ui/core/Typography';
+import React from 'react';
+import clsx from 'clsx';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import PersonIcon from '@material-ui/icons/Person';
+import SearchIcon from '@material-ui/icons/Search';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link
 } from "react-router-dom";
-import CustomerView from './CustomerView';
-import SellerView from './SellerView';
+import CustomerView from './Customer/CustomerView';
+import SellerView from './Seller/SellerView';
+import UserView from './User/UserView';
+import UserInfoView from './User/UserInfoView';
+import DetailView from './DetailView';
 
+const drawerWidth = 240;
 
-
-const styles = theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
-    minWidth: 1080
-  },
-  menu: {
-    marginTop: 15,
-    marginBottom: 15,
     display: 'flex',
-    justifyContent: 'center'
   },
-  paper: {
-    marginLeft: 18,
-    marginRight: 18
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
-  progress: {
-    margin: theme.spacing.unit * 2
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  tableHead: {
-    fontSize: '1.0rem'
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
+    marginRight: theme.spacing(2),
   },
-  title: {
+  hide: {
     display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
   },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit,
-      width: 'auto',
-    },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
   },
-  searchIcon: {
-    width: theme.spacing.unit * 9,
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  drawerHeader: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
   },
-  inputRoot: {
-    color: 'inherit',
-    width: '100%',
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: -drawerWidth,
   },
-  inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: 120,
-      '&:focus': {
-        width: 200,
-      },
-    },
-  }
-});
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
+  },
+}));
 
+export default function PersistentDrawerLeft() {
+  const classes = useStyles();
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
 
-class App extends Component {
-  render() {
-    const { classes } = this.props;
-    return (
-      <Router>
-        
-        <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
-              
-              <PopupState variant="popover" popupId="demo-popup-menu">
-      {(popupState) => (
-        <React.Fragment>
-          <MenuIcon variant="contained"  {...bindTrigger(popupState)}></MenuIcon>
-          <Menu {...bindMenu(popupState)}>
-            <MenuItem onClick={popupState.close}><Link to="/">학생 관리</Link></MenuItem>
-            <MenuItem onClick={popupState.close}><Link to="/seller">판매자 관리</Link></MenuItem>
-          </Menu>
-        </React.Fragment>
-      )}
-    </PopupState>
-            </IconButton>
-            <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-              금오페이 관리 시스템
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <Router>
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            className={clsx(classes.menuButton, open && classes.hide)}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap>
+            금오페이 관리 시스템
           </Typography>
-            <div className={classes.grow} />
-          </Toolbar>
-        </AppBar>
-        
-        
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="left"
+        open={open}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+          <ListItem button key=''>
+            <ListItemIcon><PersonIcon /></ListItemIcon>
+            <ListItemText>
+            <Link to="/user" style={{textDecoration: 'none', color: 'black'}}>사용자 관리</Link>
+            </ListItemText>
+          </ListItem>
+          <ListItem button key=''>
+            <ListItemIcon><PersonIcon /></ListItemIcon>
+            <ListItemText>
+            <Link to="/customer" style={{textDecoration: 'none', color: 'black'}}>학생 관리</Link>
+            </ListItemText>
+          </ListItem>
+          <ListItem button key=''>
+            <ListItemIcon><PersonIcon /></ListItemIcon>
+            <ListItemText>
+            <Link to="/seller" style={{textDecoration: 'none', color: 'black'}}>판매자 관리</Link>
+            </ListItemText>
+          </ListItem>
+          <ListItem button key=''>
+            <ListItemIcon><SearchIcon /></ListItemIcon>
+            <ListItemText>
+            <Link to="/detail" style={{textDecoration: 'none', color: 'black'}}>수여 내역 조회</Link>
+            </ListItemText>
+          </ListItem>
+          <ListItem button key=''>
+            <ListItemIcon><AttachMoneyIcon /></ListItemIcon>
+            <ListItemText>
+            <Link to="/adjustment" style={{textDecoration: 'none', color: 'black'}}>정산</Link>
+            </ListItemText>
+          </ListItem>
+        </List>
+      </Drawer>
+      <main
+        className={clsx(classes.content, {
+          [classes.contentShift]: open,
+        })}
+      >
+        <div className={classes.drawerHeader} />
         <Switch>
+          <Route path="/user">
+            <UserView />
+          </Route>
           <Route path="/seller">
             <SellerView />
           </Route>
-          <Route path="/">
+          <Route path="/customer">
             <CustomerView />
           </Route>
+          <Route path="/detail">
+            <DetailView />
+          </Route>
+          <Route path="/adjustment">
+          </Route>
+          <Route path="/info/???">
+            <UserInfoView />
+          </Route>
         </Switch>
-        </div>
-      </Router>
+      </main>
       
-    );
-  }
+    </div>
+    
+    </Router>
+
+  );
 }
-
-
-
-
-export default withStyles(styles)(App)

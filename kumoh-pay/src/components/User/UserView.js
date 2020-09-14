@@ -1,6 +1,6 @@
 import React from 'react'
-import Customer from './Customer'
-import './App.css';
+import User from './User'
+import '../App.css';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
-import CustomerAdd from './CustomerAdd';
+import UserAdd from './UserAdd';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
@@ -92,12 +92,12 @@ const styles = theme => ({
     }
   });
 
-class CustomerView extends React.Component {
+class UserView extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-          customers: '',
+          users: '',
           completed: 0,
           searchKeyword: ''
         }
@@ -113,12 +113,12 @@ class CustomerView extends React.Component {
     
       stateRefresh() {
         this.setState({
-          customers: '',
+            users: '',
           completed: 0,
           searchKeyword: ''
         });
         this.callApi()
-          .then(res => this.setState({ customers: res }))
+          .then(res => this.setState({ users: res }))
           .catch(err => console.log(err));
       }
     
@@ -126,7 +126,7 @@ class CustomerView extends React.Component {
       componentDidMount() {
         this.timer = setInterval(this.progress, 20);
         this.callApi()
-          .then(res => this.setState({ customers: res }))
+          .then(res => this.setState({ users: res }))
           .catch(err => console.log(err));
       }
     
@@ -136,7 +136,7 @@ class CustomerView extends React.Component {
       }
     
       callApi = async () => {
-        const response = await fetch('/api/customers');
+        const response = await fetch('/api/users');
         const body = await response.json();
         return body;
       }
@@ -153,24 +153,24 @@ class CustomerView extends React.Component {
               return c.id.indexOf(this.state.searchKeyword) > -1;
             });
             return data.map((c) => {
-              return <Customer stateRefresh={this.stateRefresh} key={c.id} id={c.id} name={c.name} major={c.major} gender={c.gender} charge={c.charge} />
+              return <User stateRefresh={this.stateRefresh} key={c.id} id={c.id} name={c.name} userGroup={c.userGroup} permit={c.permit} charge={c.charge} recentUseDate={c.recentUseDate}/>
             });
-          }
-          const { classes } = this.props;
-          const cellList = ["학번", "이름", "학과", "성별", "잔액"]
+        }
+        const { classes } = this.props;
+        const cellList = ["ID", "이름", "사용자 분류", "보유량", "최근 이용", "상세정보", "사용자삭제"]
 
         return (
-            <div>
-                <div className={classes.menu}>
-        <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-              학생 관리
-        </Typography>
-        <div className={classes.search}>
+        <div>
+        <div className={classes.menu}>
+            <Typography className={classes.title} variant="h6" color="inherit" noWrap>
+              사용자 관리
+            </Typography>
+            <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
               </div>
               <InputBase
-                placeholder="학번 검색"
+                placeholder="사용자 검색"
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
@@ -180,7 +180,7 @@ class CustomerView extends React.Component {
                 onChange={this.handleValueChange}
               />
             </div>
-          <CustomerAdd stateRefresh={this.stateRefresh} />
+            <UserAdd stateRefresh={this.stateRefresh} />
         </div>
         <Paper className={classes.paper}>
           <Table>
@@ -192,10 +192,10 @@ class CustomerView extends React.Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.customers ?
-                filteredComponents(this.state.customers) :
+              {this.state.users ?
+                filteredComponents(this.state.users) :
                 <TableRow>
-                  <TableCell colSpan="6" align="center">
+                  <TableCell colSpan="1" align="center">
                     <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} />
                   </TableCell>
                 </TableRow>
@@ -203,9 +203,9 @@ class CustomerView extends React.Component {
             </TableBody>
           </Table>
         </Paper>
-            </div>
+        </div>
         )
     }
 }
 
-export default withStyles(styles)(CustomerView)
+export default withStyles(styles)(UserView)

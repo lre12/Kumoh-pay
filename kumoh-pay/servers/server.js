@@ -22,6 +22,50 @@ const connection = mysql.createConnection({
 });
 connection.connect();
 
+app.get('/api/calc', (req, res) => {
+    connection.query(
+        'SELECT * FROM USER WHERE isDeleted = 0',
+        (err, rows, fields) => {
+            res.send(rows);
+        }
+    )
+});
+
+app.get('/api/users', (req, res) => {
+    connection.query(
+        'SELECT * FROM USER WHERE isDeleted = 0',
+        (err, rows, fields) => {
+            res.send(rows);
+        }
+    )
+});
+
+app.post('/api/users', (req, res) => {
+    let sql = 'INSERT INTO USER (id, name, userGroup, permit, charge, recentUseDate, createdDate, isDeleted) VALUES (?, ?, ?, 0, ?, now(), now(), 0)'
+    let id = req.body.id
+    let name = req.body.name
+    let userGroup = req.body.userGroup
+    let charge = req.body.charge
+    let params = [id, name, userGroup, charge]
+    console.log(req.body)
+    console.log(params)
+    connection.query(sql, params,
+        (err, rows, fields) => {
+            res.send(rows)
+        }
+    )
+})
+
+app.delete('/api/users/:id', (req, res) => {
+    let sql = 'UPDATE USER SET isDeleted = 1 WHERE id = ?';
+    let params = [req.params.id];
+    connection.query(sql, params,
+        (err, rows, fields) => {
+            res.send(rows);
+        }
+    )
+});
+
 app.get('/api/customers', (req, res) => {
     connection.query(
         'SELECT * FROM CUSTOMER WHERE isDeleted = 0',

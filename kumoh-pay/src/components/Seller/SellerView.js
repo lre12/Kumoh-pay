@@ -1,6 +1,6 @@
 import React from 'react'
 import Seller from './Seller'
-import './App.css';
+import '../App.css';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
