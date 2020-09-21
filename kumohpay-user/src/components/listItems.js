@@ -9,19 +9,13 @@ import EditIcon from '@material-ui/icons/Edit';
 import PaymentIcon from '@material-ui/icons/Payment';
 import SearchIcon from '@material-ui/icons/Search';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import {  Link } from "react-router-dom";
 
 const black = {
   color: "black"
 };
 
 export const mainListItems = (
-  <Router>
     <div>
     <ListSubheader inset>상품권 관리</ListSubheader>
     <ListItem button>
@@ -43,7 +37,6 @@ export const mainListItems = (
       <ListItemText primary="거래 내역 조회" />
     </ListItem>
   </div>
-  </Router>
   
 );
 
@@ -73,38 +66,46 @@ export const homeMainListItems = (
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>사용자 관리</ListSubheader>
+    <Link to="/join/update" style={{ textDecoration: 'none',  color: 'black'}}>
     <ListItem button>
       <ListItemIcon>
         <EditIcon style={{ textDecoration: 'none',  color: 'black'}} />
       </ListItemIcon>
-      <Link to="/update" style={{ textDecoration: 'none',  color: 'black'}}>
+      
       <ListItemText primary="회원 정보 수정" />
-      </Link>
+     
     </ListItem>
+    </Link>
+    <Link to="/" style={{ textDecoration: 'none',  color: 'black'}} >
     <ListItem button>
       <ListItemIcon>
         <ExitToAppIcon />
       </ListItemIcon>
       <ListItemText primary="로그아웃" />
     </ListItem>
+    </Link>
   </div>
 );
 
 export const homeSecondaryListItems = (
   <div>
+    <Link to="/join/update" style={{ textDecoration: 'none',  color: 'black'}} >
     <ListItem button>
       <ListItemIcon>
-      <Link to="/update" style={{ textDecoration: 'none',  color: 'black'}} >
+      
         <EditIcon />
-      </Link>
+      
       </ListItemIcon>
       <ListItemText primary="회원 정보 수정" />
     </ListItem>
+    </Link>
+    <Link to="/" style={{ textDecoration: 'none',  color: 'black'}} >
     <ListItem button>
       <ListItemIcon>
         <ExitToAppIcon />
       </ListItemIcon>
       <ListItemText primary="로그아웃" />
     </ListItem>
+    </Link>
   </div>
 );
