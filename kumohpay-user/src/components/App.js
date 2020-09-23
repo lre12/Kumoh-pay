@@ -1,18 +1,56 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Route, Switch, Redirect } from "react-router-dom";
+import { withCookies, useCookies } from 'react-cookie';
 import Login from './Login';
+import Join from './Join';
 import WebView from './webview';
-import { Route, Switch } from 'react-router-dom';
 
-
-
-export default function App() {
-    return(
-        <Switch>
-            <Route exact path="/" component = { Login }/>
-            <Route path = '/join' component = { WebView }/>
-        </Switch>
+const App = () => {
+    const [cookies, removeCookie] = useCookies(['user']);
+    const [hasCookie, setHasCookie] = useState(false);
+    useEffect(() => {
+        if (cookies.user && cookies.user !== 'undefined') {
+            setHasCookie(true);
+        }
+    }, [cookies]);
+    return (
+        <div className="App">
+            {!hasCookie ? <Redirect to="/login" /> : <Redirect to="/WebView" />}
+            <Switch>
+                <Route
+                    exact path="/login"
+                    render={routerProps => {
+                        return (
+                            <Login
+                                {...routerProps}
+                                setHasCookie={setHasCookie}
+                            />
+                        );
+                    }}
+                />
+                <Route
+                    exact path="/join"
+                    component={Join}
+                />
+                <Route
+                    exact path="/WebView"
+                    render={routerProps => {
+                        return (
+                            <WebView
+                                {...routerProps}
+                                setHasCookie={setHasCookie}
+                                removeCookie={() => {
+                                    removeCookie('user');
+                                    setHasCookie(false);
+                                }}
+                            />
+                        );
+                    }}
+                />
+            </Switch>
+        </div>
     );
+};
+export default withCookies(App);
 
-  
-}
+

@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './App.css';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -11,9 +10,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import {  Link } from "react-router-dom";
 
-const black = {
-  color: "black"
-};
 
 export const mainListItems = (
     <div>
@@ -66,7 +62,7 @@ export const homeMainListItems = (
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>사용자 관리</ListSubheader>
-    <Link to="/join/update" style={{ textDecoration: 'none',  color: 'black'}}>
+    <Link to="/WebView/update" style={{ textDecoration: 'none',  color: 'black'}}>
     <ListItem button>
       <ListItemIcon>
         <EditIcon style={{ textDecoration: 'none',  color: 'black'}} />
@@ -89,7 +85,7 @@ export const secondaryListItems = (
 
 export const homeSecondaryListItems = (
   <div>
-    <Link to="/join/update" style={{ textDecoration: 'none',  color: 'black'}} >
+    <Link to="/WebView/update" style={{ textDecoration: 'none',  color: 'black'}} >
     <ListItem button>
       <ListItemIcon>
       
