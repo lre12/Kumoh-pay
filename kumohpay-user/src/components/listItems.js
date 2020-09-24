@@ -7,7 +7,6 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import EditIcon from '@material-ui/icons/Edit';
 import PaymentIcon from '@material-ui/icons/Payment';
 import SearchIcon from '@material-ui/icons/Search';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import {  Link } from "react-router-dom";
 
 
@@ -62,7 +61,7 @@ export const homeMainListItems = (
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>사용자 관리</ListSubheader>
-    <Link to="/WebView/update" style={{ textDecoration: 'none',  color: 'black'}}>
+    <Link to="/update" style={{ textDecoration: 'none',  color: 'black'}}>
     <ListItem button>
       <ListItemIcon>
         <EditIcon style={{ textDecoration: 'none',  color: 'black'}} />
@@ -72,20 +71,12 @@ export const secondaryListItems = (
      
     </ListItem>
     </Link>
-    <Link to="/" style={{ textDecoration: 'none',  color: 'black'}} >
-    <ListItem button>
-      <ListItemIcon>
-        <ExitToAppIcon />
-      </ListItemIcon>
-      <ListItemText primary="로그아웃" />
-    </ListItem>
-    </Link>
   </div>
 );
 
 export const homeSecondaryListItems = (
   <div>
-    <Link to="/WebView/update" style={{ textDecoration: 'none',  color: 'black'}} >
+    <Link to="/update" style={{ textDecoration: 'none',  color: 'black'}} >
     <ListItem button>
       <ListItemIcon>
       
@@ -93,14 +84,6 @@ export const homeSecondaryListItems = (
       
       </ListItemIcon>
       <ListItemText primary="회원 정보 수정" />
-    </ListItem>
-    </Link>
-    <Link to="/" style={{ textDecoration: 'none',  color: 'black'}} >
-    <ListItem button>
-      <ListItemIcon>
-        <ExitToAppIcon />
-      </ListItemIcon>
-      <ListItemText primary="로그아웃" />
     </ListItem>
     </Link>
   </div>

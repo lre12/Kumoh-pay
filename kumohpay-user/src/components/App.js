@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter,Route, Switch, Redirect } from "react-router-dom";
 import { withCookies, useCookies } from 'react-cookie';
 import Login from './Login';
 import Join from './Join';
@@ -16,6 +16,7 @@ const App = () => {
     return (
         <div className="App">
             {!hasCookie ? <Redirect to="/login" /> : <Redirect to="/WebView" />}
+            <BrowserRouter>
             <Switch>
                 <Route
                     exact path="/login"
@@ -42,12 +43,15 @@ const App = () => {
                                 removeCookie={() => {
                                     removeCookie('user');
                                     setHasCookie(false);
+                                    window.location.reload();
                                 }}
                             />
                         );
                     }}
                 />
             </Switch>
+            </BrowserRouter>
+            
         </div>
     );
 };

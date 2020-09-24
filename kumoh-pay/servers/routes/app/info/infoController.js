@@ -14,3 +14,20 @@ exports.getAll = async function(req,res,next){
         next(err)
     }
 }
+
+exports.update = async function(req,res,next){
+    id = res.locals.userId;
+    pwd = req.body.pwd;
+    var sql = "UPDATE USER SET password ="+'"'+pwd+'"'+" WHERE id =" + '"' + id + '"';
+    try{
+        await connection.query(sql,
+            (err, rows, fields) => {
+                res.send({
+                    result : 'ok'
+                });
+            }
+        )
+    }catch(err){
+        next(err)
+    }
+}
