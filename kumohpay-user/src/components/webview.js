@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -20,33 +20,21 @@ import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import { useStyles } from './style';
 import MainView from './mainView';
 import UpdateInfoView from './UpdateInfoView';
+import UserStore from '../stores/UserStore'
 
 const WebView = ({ setHasCookie, removeCookie }) => {
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [charge, setCharge] = useState(null);
   const [userGroup, setUserGroup] = useState(null);
+  const userStore = useContext(UserStore.context)
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
-    const getInfoApi = () => {
-      return new Promise((resolve, reject) => {
-        console.log("signal");
-        console.log(signal.aborted);
-        fetch('/app/info', {
-          signal: signal,
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-          .then(res => resolve(res.json()))
-          .catch(err => reject(err));
-      });
-    };
+    
     const onInfoLoad = async () => {
       try {
-        const response = await getInfoApi();
+        const response = await userStore.getInfoApi(signal);
         if (response.error === 'token expired') {
           setHasCookie(false);
         } else {

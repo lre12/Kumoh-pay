@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { action } from 'mobx';
 import {createContext} from "react";
 import { post } from 'axios';
 
@@ -13,6 +13,8 @@ class UserStore{
   constructor(){
     this.context = createContext(this)
   }
+
+  
   
   @action 
   loginApi = async (userId, userPw) => {
@@ -21,6 +23,52 @@ class UserStore{
     await post(url, {
       id: userId,
       pwd: userPw,
+    }).then(function (response) {
+      res = response;
+      console.log(response);
+    })
+    return res;
+  }
+
+  @action
+  getInfoApi = (signal) => {
+    return new Promise((resolve, reject) => {
+      console.log("signal");
+      console.log(signal.aborted);
+      fetch('/app/info', {
+        signal: signal,
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(res => resolve(res.json()))
+        .catch(err => reject(err));
+    });
+  };
+
+  @action
+  changeInfoApi = async (id, pwd)=>{
+    const url = '/app/info/update';
+        let res;
+       await post(url,{
+          id : id,
+          pwd : pwd
+        }).then(function (response) {
+          res = response;
+          console.log(response);
+        })
+        return res;
+  }
+
+  @action
+  createUserApi = async (userId,userPw,userName)=> {
+    const url = '/app/auth/new';
+    let res;
+   await post(url,{
+      id : userId,
+      pwd : userPw,
+      name : userName,
     }).then(function (response) {
       res = response;
       console.log(response);

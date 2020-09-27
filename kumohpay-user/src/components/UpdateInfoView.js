@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { post } from 'axios';
+import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,6 +15,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Typography from '@material-ui/core/Typography';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import UserStore from '../stores/UserStore'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,25 +41,13 @@ const UpdateInfoView = ({ setHasCookie, removeCookie }) => {
   const [name, setName] = useState(null);
   const [charge, setCharge] = useState(null);
   const [userGroup, setUserGroup] = useState(null);
+  const userStore = useContext(UserStore.context)
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
-    const getInfoApi = () => {
-      return new Promise((resolve, reject) => {
-        fetch('/app/info', {
-          signal: signal,
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-          .then(res => resolve(res.json()))
-          .catch(err => reject(err));
-      });
-    };
     const onInfoLoad = async () => {
       try {
-        const response = await getInfoApi();
+        const response = await userStore.getInfoApi(signal);
         if (response.error === 'token expired') {
           setHasCookie(false);
         } else {
@@ -98,26 +86,10 @@ const UpdateInfoView = ({ setHasCookie, removeCookie }) => {
     event.preventDefault();
   };
 
-  const changeInfoApi = async ()=>{
-    const url = '/app/info/update';
-        let res;
-       await post(url,{
-          id : id,
-          pwd : values.password
-        }).then(function (response) {
-          res = response;
-          console.log(response);
-        })
-        return res;
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await changeInfoApi({
-            user_id : id,
-            user_pwd : values.password
-        });
+        const response = await userStore.changeInfoApi(id,values.password);
         console.log(response);
         console.log('zz');
         if (response.data.result === 'ok') {

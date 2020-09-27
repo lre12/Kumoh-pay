@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { Link } from "react-router-dom";
-import { post } from 'axios';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';

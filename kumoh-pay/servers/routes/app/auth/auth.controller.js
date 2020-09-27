@@ -44,7 +44,7 @@ exports.createToken = function (req, res, next) {
 
 exports.createNewUser = function (req, res, next) {
     try{
-        
+        const secret = req.app.get('jwt-secret')
         let id = req.body.id
         let password = req.body.pwd
         let name = req.body.name
@@ -55,7 +55,7 @@ exports.createNewUser = function (req, res, next) {
             (err, rows, fields) => {
                 const token = jwt.sign({
                     user_id: id
-                    }, YOUR_SECRET_KEY, {
+                    }, secret, {
                     expiresIn: '1h'
                     });
                     res.cookie('user', token);

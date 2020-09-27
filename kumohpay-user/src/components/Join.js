@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from "react-router-dom";
-import { post } from 'axios';
+import UserStore from '../stores/UserStore'
 
 
 const Join = () => {
@@ -8,28 +8,12 @@ const Join = () => {
     const [userPw, setUserPw] = useState('');
     const [userName, setUserName] = useState('');
     const [isJoinSuccess, setJoinSuccess] = useState(false);
-    const createUserApi = async ()=> {
-        const url = '/app/auth/new';
-        let res;
-       await post(url,{
-          id : userId,
-          pwd : userPw,
-          name : userName,
-        }).then(function (response) {
-          res = response;
-          console.log(response);
-        })
-        return res;
-      }
+    const userStore = useContext(UserStore.context)
       
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await createUserApi({
-                user_id: userId,
-                user_pw: userPw,
-                user_name: userName
-            });
+            const response = await userStore.createUserApi(userId,userPw,userName);
             console.log(response.data.result);
             if (response.data.result === 'ok') {
                 setJoinSuccess(true);

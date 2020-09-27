@@ -79,5 +79,5 @@ export const useStyles = makeStyles((theme) => ({
     },
     fixedHeight: {
       height: 240,
-    },
+    }
   }));
