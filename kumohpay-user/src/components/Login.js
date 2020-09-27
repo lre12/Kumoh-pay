@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from "react-router-dom";
 import { post } from 'axios';
 import Avatar from '@material-ui/core/Avatar';
@@ -10,6 +10,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import {observer} from "mobx-react"
+import UserStore from '../stores/UserStore'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -34,24 +36,13 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const Login = ({ setHasCookie }) => {
+const Login = observer(({ setHasCookie }) => {
   const [userId, setUserId] = useState('');
   const [userPw, setUserPw] = useState('');
 
   const classes = useStyles();
+  const userStore = useContext(UserStore.context)
 
-  const loginApi = async () => {
-    const url = '/app/auth/login';
-    let res;
-    await post(url, {
-      id: userId,
-      pwd: userPw,
-    }).then(function (response) {
-      res = response;
-      console.log(response);
-    })
-    return res;
-  }
 
 
 
@@ -61,7 +52,7 @@ const Login = ({ setHasCookie }) => {
       return;
     }
     try {
-      const response = await loginApi();
+      const response = await userStore.loginApi(userId,userPw);
       console.log(response);
       if (response.data.result === 'ok') {
         setHasCookie(true);
@@ -139,33 +130,6 @@ const Login = ({ setHasCookie }) => {
         </Container>
     </div>
 
-
-
-    //     <div>
-    //       <h2>Login</h2>
-    //       <form
-    //         
-    //       >
-    //         <input
-    //           type="text"
-    //           name="user_id"
-   
-    //           placeholder="id"
-    //         />
-    //         <input
-    //           type="password"
-    //           name="user_pw"
-
-    //           placeholder="pw"
-    //         />
-    //         <button
-    //           type="submit"
-    //         >
-    //           Login
-    // </button>
-    //       </form>
-
-    //     </div>
   );
-};
+})
 export default Login;
