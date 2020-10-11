@@ -43,7 +43,6 @@ const App = () => {
                                 removeCookie={() => {
                                     removeCookie('user');
                                     setHasCookie(false);
-                                    window.location.reload();
                                 }}
                             />
                         );

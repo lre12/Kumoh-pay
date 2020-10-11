@@ -52,7 +52,6 @@ const Join = () => {
             console.log(response.data.result);
             if (response.data.result === 'ok') {
                 setJoinSuccess(true);
-                window.location.reload(false);
             }
         } catch (err) {
             console.error('login error', err);
