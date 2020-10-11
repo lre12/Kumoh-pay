@@ -43,8 +43,6 @@ const Login = observer(({ setHasCookie }) => {
   const userStore = useContext(UserStore.context)
 
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userId || !userPw) {

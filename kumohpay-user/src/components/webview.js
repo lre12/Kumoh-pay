@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { Redirect, useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -28,6 +28,13 @@ const WebView = ({ setHasCookie, removeCookie }) => {
   const [charge, setCharge] = useState(null);
   const [userGroup, setUserGroup] = useState(null);
   const userStore = useContext(UserStore.context)
+
+  const logout = () => {
+    removeCookie();
+    window.location.reload();
+  };
+
+  
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -71,73 +78,79 @@ const WebView = ({ setHasCookie, removeCookie }) => {
     firstList = <List>{homeMainListItems}</List>
     secondList = <List>{homeSecondaryListItems}</List>
   }
-  return (
+  if(setHasCookie){
+    return (
 
-    <BrowserRouter>
-      <div className={classes.root}>
-        <CssBaseline />
-        <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-          <Toolbar className={classes.toolbar}>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              <Link to="/WebView" style={{ textDecoration: 'none', color: 'white' }}>
-                금오페이
-            </Link>
-            </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton color="inherit" onClick={removeCookie}>
-              <Badge color="secondary">
-                <ExitToAppIcon />
-              </Badge>
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          variant="permanent"
-          classes={{
-            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-          }}
-          open={open}
-        >
-          <div className={classes.toolbarIcon}>
-            <IconButton onClick={handleDrawerClose}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </div>
-          <Divider />
-          {firstList}
-          <Divider />
-          {secondList}
-        </Drawer>
-        <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
-          <Container maxWidth="lg" className={classes.container}>
-            <Switch>
-              <Route path="/WebView">
-                <MainView id={id} name={name} charge={charge} userGroup={userGroup} />
-              </Route>
-              <Route path="/update">
-                <UpdateInfoView setHasCookie = {setHasCookie}/>
-              </Route>
-            </Switch>
-          </Container>
-
-
-        </main>
-      </div>
-    </BrowserRouter>
-  );
+      <BrowserRouter>
+        <div className={classes.root}>
+          <CssBaseline />
+          <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+            <Toolbar className={classes.toolbar}>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+                <Link to="/WebView" style={{ textDecoration: 'none', color: 'white' }}>
+                  금오페이
+              </Link>
+              </Typography>
+              <IconButton color="inherit">
+                <Badge badgeContent={4} color="secondary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+              <IconButton color="inherit" onClick={logout}>
+                <Badge color="secondary">
+                  <ExitToAppIcon />
+                </Badge>
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            variant="permanent"
+            classes={{
+              paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+            }}
+            open={open}
+          >
+            <div className={classes.toolbarIcon}>
+              <IconButton onClick={handleDrawerClose}>
+                <ChevronLeftIcon />
+              </IconButton>
+            </div>
+            <Divider />
+            {firstList}
+            <Divider />
+            {secondList}
+          </Drawer>
+          <main className={classes.content}>
+            <div className={classes.appBarSpacer} />
+            <Container maxWidth="lg" className={classes.container}>
+              <Switch>
+                <Route path="/WebView">
+                  <MainView id={id} name={name} charge={charge} userGroup={userGroup} />
+                </Route>
+                <Route path="/update">
+                  <UpdateInfoView setHasCookie = {setHasCookie}/>
+                </Route>
+              </Switch>
+            </Container>
+  
+  
+          </main>
+        </div>
+      </BrowserRouter>
+    );
+  }
+  else{
+    return <Redirect to='/login'  />
+  }
+  
 }
 export default WebView;

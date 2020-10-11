@@ -62,13 +62,27 @@ class UserStore{
   }
 
   @action
-  createUserApi = async (userId,userPw,userName)=> {
+  createUserApi = async (userId,userPw,userName,authNumber)=> {
     const url = '/app/auth/new';
     let res;
    await post(url,{
       id : userId,
       pwd : userPw,
       name : userName,
+      ranNum : authNumber,
+    }).then(function (response) {
+      res = response;
+      console.log(response);
+    })
+    return res;
+  }
+
+  @action
+  sendMail = async (userMail)=> {
+    const url = '/app/auth/mail';
+    let res;
+   await post(url,{
+      mail : userMail,
     }).then(function (response) {
       res = response;
       console.log(response);
