@@ -13,18 +13,22 @@ import {  Link } from "react-router-dom";
 export const mainListItems = (
     <div>
     <ListSubheader inset>상품권 관리</ListSubheader>
+    <Link to="/sendVoucher" style={{ textDecoration: 'none',  color: 'black'}}>
     <ListItem button>
       <ListItemIcon>
         <PaymentIcon />
       </ListItemIcon>
       <ListItemText primary="결제" />
     </ListItem>
+    </Link>
+    <Link to="/getVoucher" style={{ textDecoration: 'none',  color: 'black'}}>
     <ListItem button>
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
       <ListItemText primary="상품권 수령" />
     </ListItem>
+    </Link>
     <ListItem button>
       <ListItemIcon>
         <SearchIcon />
@@ -32,23 +36,26 @@ export const mainListItems = (
       <ListItemText primary="거래 내역 조회" />
     </ListItem>
   </div>
-  
 );
 
 export const homeMainListItems = (
   <div>
+    <Link to="/sendVoucher" style={{ textDecoration: 'none',  color: 'black'}}>
     <ListItem button>
       <ListItemIcon>
         <PaymentIcon />
       </ListItemIcon>
       <ListItemText primary="결제" />
     </ListItem>
+    </Link>
+    <Link to="/getVoucher" style={{ textDecoration: 'none',  color: 'black'}}>
     <ListItem button>
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
       <ListItemText primary="상품권 수령" />
     </ListItem>
+    </Link>
     <ListItem button>
       <ListItemIcon>
         <SearchIcon />
@@ -79,9 +86,7 @@ export const homeSecondaryListItems = (
     <Link to="/update" style={{ textDecoration: 'none',  color: 'black'}} >
     <ListItem button>
       <ListItemIcon>
-      
         <EditIcon />
-      
       </ListItemIcon>
       <ListItemText primary="회원 정보 수정" />
     </ListItem>

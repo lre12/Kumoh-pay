@@ -20,9 +20,11 @@ import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import { useStyles } from './style';
 import MainView from './mainView';
 import UpdateInfoView from './UpdateInfoView';
+import GetVoucherView from './GetVoucherView';
+import SendVoucherScanner from './SendVoucherScanner';
 import UserStore from '../stores/UserStore'
 
-const WebView = ({ setHasCookie, removeCookie }) => {
+const WebView = ({ setHasCookie, removeCookie },props) => {
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [charge, setCharge] = useState(null);
@@ -138,6 +140,12 @@ const WebView = ({ setHasCookie, removeCookie }) => {
                 </Route>
                 <Route path="/update">
                   <UpdateInfoView setHasCookie = {setHasCookie}/>
+                </Route>
+                <Route path="/getVoucher">
+                  <GetVoucherView setHasCookie = {setHasCookie}/>
+                </Route>
+                <Route path="/sendVoucher">
+                  <SendVoucherScanner setHasCookie = {setHasCookie}/>
                 </Route>
               </Switch>
             </Container>
