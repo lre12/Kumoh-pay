@@ -17,7 +17,6 @@ const App = () => {
         <div className="App">
             {!hasCookie ? <Redirect to="/login" /> : <Redirect to="/WebView" />}
             <BrowserRouter>
-            <Switch>
                 <Route
                     exact path="/login"
                     render={routerProps => {
@@ -48,7 +47,6 @@ const App = () => {
                         );
                     }}
                 />
-            </Switch>
             </BrowserRouter>
             
         </div>

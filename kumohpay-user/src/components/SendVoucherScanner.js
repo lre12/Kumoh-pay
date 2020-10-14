@@ -97,7 +97,7 @@ const SendVoucherScanner = ({ setHasCookie, removeCookie }) =>{
                 delay={300}
                 onError={handleError}
                 onScan={handleScan}
-                style={{ width: '100%' }}
+                style={{ width: '90%' }}
               />
               <p>{result}</p>
             </div>

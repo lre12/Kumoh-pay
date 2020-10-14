@@ -1,210 +1,52 @@
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import PersonIcon from '@material-ui/icons/Person';
-import SearchIcon from '@material-ui/icons/Search';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-import CustomerView from './Customer/CustomerView';
-import SellerView from './Seller/SellerView';
-import UserView from './User/UserView';
-import UserInfoView from './User/UserInfoView';
-import DetailView from './DetailView';
+import React, { useState, useEffect } from 'react';
+import {BrowserRouter as Router, Route, Switch , Redirect } from "react-router-dom"
+import { withCookies, useCookies } from 'react-cookie';
 
-const drawerWidth = 240;
+import Layout from './Layout';
+import Login from './Login';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  appBar: {
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  hide: {
-    display: 'none',
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  drawerHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
-  },
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  },
-}));
+const App = () => {
+  const [cookies, removeCookie] = useCookies(['user']);
+  const [hasCookie, setHasCookie] = useState(false);
 
-export default function App() {
-  const classes = useStyles();
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <Router>
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, open && classes.hide)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            금오페이 관리 시스템
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="left"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </div>
-        <Divider />
-        <List>
-          <ListItem button key=''>
-            <ListItemIcon><PersonIcon /></ListItemIcon>
-            <ListItemText>
-            <Link to="/user" style={{textDecoration: 'none', color: 'black'}}>사용자 관리</Link>
-            </ListItemText>
-          </ListItem>
-          <ListItem button key=''>
-            <ListItemIcon><PersonIcon /></ListItemIcon>
-            <ListItemText>
-            <Link to="/customer" style={{textDecoration: 'none', color: 'black'}}>학생 관리</Link>
-            </ListItemText>
-          </ListItem>
-          <ListItem button key=''>
-            <ListItemIcon><PersonIcon /></ListItemIcon>
-            <ListItemText>
-            <Link to="/seller" style={{textDecoration: 'none', color: 'black'}}>판매자 관리</Link>
-            </ListItemText>
-          </ListItem>
-          <ListItem button key=''>
-            <ListItemIcon><SearchIcon /></ListItemIcon>
-            <ListItemText>
-            <Link to="/detail" style={{textDecoration: 'none', color: 'black'}}>수여 내역 조회</Link>
-            </ListItemText>
-          </ListItem>
-          <ListItem button key=''>
-            <ListItemIcon><AttachMoneyIcon /></ListItemIcon>
-            <ListItemText>
-            <Link to="/adjustment" style={{textDecoration: 'none', color: 'black'}}>정산</Link>
-            </ListItemText>
-          </ListItem>
-        </List>
-      </Drawer>
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}
-      >
-        <div className={classes.drawerHeader} />
+  return(
+    <div>
+      {/* {!hasCookie ? <Redirect to="/" /> : <Redirect to="login" />} */}
+      <Router>
         <Switch>
-          <Route path="/user">
-            <UserView />
-          </Route>
-          <Route path="/seller">
-            <SellerView />
-          </Route>
-          <Route path="/customer">
-            <CustomerView />
-          </Route>
-          <Route path="/detail">
-            <DetailView />
-          </Route>
-          <Route path="/adjustment">
-          </Route>
-          <Route path="/info/???">
-            <UserInfoView />
-          </Route>
+          <Route 
+            exact path="/login"
+            render={routerProps => {
+              return (
+                  <Login
+                      {...routerProps}
+                      setHasCookie={setHasCookie}
+                  />
+              );
+          }}
+          />
+          <Route
+            exact path="/"
+            render={routerProps => {
+              return (
+                <div>
+                  <Layout
+                  {...routerProps}
+                  setHasCookie={setHasCookie}
+                  removeCookie={() => {
+                    removeCookie('user');
+                    setHasCookie(false);
+                    window.location.reload();
+                  }}
+                />
+                </div>
+              );
+            }}
+          />
         </Switch>
-      </main>
-      
+      </Router>      
     </div>
-    
-    </Router>
-
   );
 }
+export default withCookies(App);

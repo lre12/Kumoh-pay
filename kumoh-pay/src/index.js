@@ -4,6 +4,8 @@ import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { BrowserRouter } from 'react-router-dom';
+import { CookiesProvider } from 'react-cookie';
 
 const theme = createMuiTheme({
   typography: {
@@ -11,6 +13,14 @@ const theme = createMuiTheme({
   },
 });
 
-ReactDOM.render(<MuiThemeProvider theme={theme}><App /></MuiThemeProvider>, document.getElementById('root'));
+ReactDOM.render(
+<MuiThemeProvider theme={theme}>
+  <BrowserRouter>
+    <CookiesProvider>
+      <App />
+    </CookiesProvider>
+  </BrowserRouter>
+</MuiThemeProvider>, 
+document.getElementById('root'));
 
 serviceWorker.unregister();
