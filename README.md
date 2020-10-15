@@ -9,17 +9,6 @@
  
  - 원본 : https://google.github.io/styleguide/jsguide.html
 
-+ 실행법
- - root폴더 = kumoh-pay(소문자) 폴더
- - node 설치
- - npm install @material-ui/core
- - npm i @material-ui/icons
- - npm install -S mysql
- - npm install axios
- - npm install --save multer
- - root에 database.json 추가(gitignore상태)
- - root에서 npm start
-
 + version
  - npm : 6.14.5
  - node : v12.18.2
@@ -48,3 +37,16 @@
  3. 응용 분야 및 기여도
 
   - 본 시스템은 상품권을 전산화하여 훼손 및 분실로부터 자유롭지 못한 기존 상품권의 약점을 보완한다. 또한 여러 장으로 분할된 상품권의 통합 관리 또한 지원하여 보관 및 사용이 편리하게 하며, 발행과 유통 과정에서 발생하는 금전적, 시간적 비용을 최소화하여 생활협동조합을 이용하는 모든 금오인들의 편익 증진에 기여한다.
+  
+## 기술 스택
+ + SERVER
+  - express
+  - jwt
+  - AWS DB(MYSQL)
+  - sha512 암호화 (crypto)
+ + CLIENT
+  - React
+  - Mobx
+  - React Hook
+ + BlockChain
+  - HyperLedger(private blockchain)
