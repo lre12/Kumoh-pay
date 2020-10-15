@@ -39,14 +39,14 @@
     - 본 시스템은 상품권을 전산화하여 훼손 및 분실로부터 자유롭지 못한 기존 상품권의 약점을 보완한다. 또한 여러 장으로 분할된 상품권의 통합 관리 또한 지원하여 보관 및 사용이 편리하게 하며, 발행과 유통 과정에서 발생하는 금전적, 시간적 비용을 최소화하여 생활협동조합을 이용하는 모든 금오인들의 편익 증진에 기여한다.
   
 ## 기술 스택
-    * SERVER
+* SERVER
          - express
          - jwt
          - AWS DB(MYSQL)
          - sha512 암호화 (crypto)
-    * CLIENT
+* CLIENT
          - React
          - Mobx
          - React Hook
-    * BlockChain
+* BlockChain
          - HyperLedger(private blockchain)
