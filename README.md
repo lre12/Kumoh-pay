@@ -40,13 +40,13 @@
   
 ## 기술 스택
 * SERVER
-         - express
-         - jwt
-         - AWS DB(MYSQL)
-         - sha512 암호화 (crypto)
+    - express
+    - jwt
+    - AWS DB(MYSQL)
+    - sha512 암호화 (crypto)
 * CLIENT
-         - React
-         - Mobx
-         - React Hook
+    - React
+    - Mobx
+    - React Hook
 * BlockChain
-         - HyperLedger(private blockchain)
+    - HyperLedger(private blockchain)
