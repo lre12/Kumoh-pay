@@ -6,7 +6,7 @@ const connection = require('../../../dbconnection');
 const nodeMailer = require('nodemailer');
 const title = "금오페이 인증번호"
 let ranNum = 0;
-
+const config = require('../../../config')
 const crypto = require('crypto');
 
 
@@ -16,14 +16,14 @@ const mailPoster = nodeMailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
     auth: {
-        user: 'swj951105@gmail.com',
-        pass: 'awio0117@@'
+        user: config.mail,
+        pass: config.pwd
     }
 });
 
 const mailOpt = (email, title, contents) => {
     const mailOptions = {
-        from: 'swj951105@gmail.com',
+        from: config.mail,
         to: email,
         subject: title,
         text: contents

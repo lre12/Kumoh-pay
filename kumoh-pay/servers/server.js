@@ -16,5 +16,4 @@ const manageRouter = require('./routes/manage')
 app.use('/api',manageRouter)
 app.use('/app', require('./routes/app/index'))
 app.set('jwt-secret', config.secret)
-
 app.listen(port, () => console.log(`Listening on port ${port}`))

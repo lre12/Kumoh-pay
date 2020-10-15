@@ -1,9 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter,Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter,Route, Redirect} from "react-router-dom";
 import { withCookies, useCookies } from 'react-cookie';
 import Login from './Login';
 import Join from './Join';
 import WebView from './webview';
+
+function device_check() {
+    // 디바이스 종류 설정
+    var pc_device = "win16|win32|win64|mac|macintel";
+ 
+    // 접속한 디바이스 환경
+    var this_device = navigator.platform;
+ 
+    if ( this_device ) {
+ 
+        if ( pc_device.indexOf(navigator.platform.toLowerCase()) < 0 ) {
+            return true
+        } else {
+            return false
+        }
+ 
+    }
+}
+
+
 
 const App = () => {
     const [cookies, removeCookie] = useCookies(['user']);
@@ -13,11 +33,11 @@ const App = () => {
             setHasCookie(true);
         }
     }, [cookies]);
-    return (
-        <div className="App">
-            {!hasCookie ? <Redirect to="/login" /> : <Redirect to="/WebView" />}
+    if(!hasCookie&&device_check()){
+        return(
             <BrowserRouter>
-                <Route
+            <Redirect to="/login" />
+            <Route
                     exact path="/login"
                     render={routerProps => {
                         return (
@@ -28,11 +48,21 @@ const App = () => {
                         );
                     }}
                 />
-                <Route
+                            <Route
                     exact path="/join"
                     component={Join}
                 />
-                <Route
+            
+            </BrowserRouter>
+            
+        )
+        
+    }
+    else if(device_check()){
+        return(
+            <BrowserRouter>
+            <Redirect to="/WebView" />
+             <Route
                     exact path="/WebView"
                     render={routerProps => {
                         return (
@@ -49,8 +79,15 @@ const App = () => {
                 />
             </BrowserRouter>
             
-        </div>
-    );
+        )
+    }
+    else{
+        return(
+            <div>
+                보안상의 이유로 PC로는 접속할 수 없습니다.
+            </div>
+        )
+    }
 };
 export default withCookies(App);
 

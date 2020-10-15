@@ -33,7 +33,6 @@ const WebView = ({ setHasCookie, removeCookie },props) => {
 
   const logout = () => {
     removeCookie();
-    window.location.reload();
   };
 
   
