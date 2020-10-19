@@ -143,7 +143,7 @@ const headCells = [
     { id: "recentUseDate", label: "최근이용" },
   ];
 
-export default function UserView() {
+export default function UserView({ setHasCookie}) {
   const classes = useStyles();
   const [data, setData] = useState([]);
   const [order, setOrder] = useState("asc");
@@ -373,8 +373,8 @@ export default function UserView() {
                       <TableCell align="center">{user.permit}</TableCell>
                       <TableCell align="center">{user.charge}</TableCell>
                       <TableCell align="center">{user.recentUseDate}</TableCell>
-                      <TableCell><UserDetail handleChangeData={handleChangeData} id={user.id} name={user.name} userGroup={user.userGroup} permit={user.permit} charge={user.charge}/></TableCell>
-                      <TableCell><UserDelete handleChangeData={handleChangeData} id={user.id} name={user.name} charge={user.charge}/></TableCell>
+                      <TableCell><UserDetail setHasCookie = {setHasCookie} handleChangeData={handleChangeData} id={user.id} name={user.name} userGroup={user.userGroup} permit={user.permit} charge={user.charge}/></TableCell>
+                      <TableCell><UserDelete setHasCookie = {setHasCookie} handleChangeData={handleChangeData} id={user.id} name={user.name} charge={user.charge}/></TableCell>
                     </TableRow>
                   );
                 })}

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Redirect, useEffect, useState} from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Layout() {
+function Layout({ setHasCookie, removeCookie }) {
   const classes = useStyles();
   const theme = useTheme();
   const [id, setId] = useState(null);
@@ -97,74 +97,80 @@ function Layout() {
   const handleDrawerOpen = () => {
     setOpen(true);
   };
-
+  const logout = () => {
+    removeCookie();
+  };
   const handleDrawerClose = () => {
     setOpen(false); 
   };
-
-  return (
-    <Router>
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-            <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, open && classes.hide)}
-            >
-                <MenuIcon />
+  if(setHasCookie){
+    return (
+      <Router>
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          className={clsx(classes.appBar, {
+            [classes.appBarShift]: open,
+          })}
+        >
+          <Toolbar>
+              <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton, open && classes.hide)}
+              >
+                  <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" className={classes.titleApp}>
+                  <Link to="/home" style={{textDecoration: 'none', color: 'white'}}>
+                          금오페이 관리 시스템
+                  </Link>
+              </Typography>
+              <Button onClick={logout} focus="right" color="inherit" href="/login">
+                  로그아웃
+              </Button>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          className={classes.drawer}
+          variant="persistent"
+          anchor="left"
+          open={open}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+        >
+          <div className={classes.drawerHeader}>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
             </IconButton>
-            <Typography variant="h6" className={classes.titleApp}>
-                <Link to="/" style={{textDecoration: 'none', color: 'white'}}>
-                        금오페이 관리 시스템
-                </Link>
-            </Typography>
-            <Button focus="right" color="inherit" href="/login">
-                로그아웃
-            </Button>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="left"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </div>
-        <Divider />
-          <List>{ menuListItems }</List>
-      </Drawer>
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}
-      >
-        <div className={classes.drawerHeader} />
-        <Voucher />
-        <Switch>
-          <Route path="/user"><UserView /></Route>
-          <Route path="/present"><PresentView/></Route>
-          <Route path="/settlement"><CalculateView /></Route>
-        </Switch>
-      </main>
-    </div>
-    </Router>
-  );
+          </div>
+          <Divider />
+            <List>{ menuListItems }</List>
+        </Drawer>
+        <main
+          className={clsx(classes.content, {
+            [classes.contentShift]: open,
+          })}
+        >
+          <div className={classes.drawerHeader} />
+          <Voucher />
+          <Switch>
+            <Route path="/user"><UserView setHasCookie = {setHasCookie}/></Route>
+            <Route path="/present"><PresentView setHasCookie = {setHasCookie}/></Route>
+            <Route path="/settlement"><CalculateView setHasCookie = {setHasCookie} /></Route>
+          </Switch>
+        </main>
+      </div>
+      </Router>
+    );
+  }
+  else{
+    return <Redirect to='/login'  />
+  }
 }
 export default Layout;
 

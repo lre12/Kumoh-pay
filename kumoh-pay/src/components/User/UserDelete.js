@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Typography from '@material-ui/core/Typography';
 
-const UserDelete = (props) => {
+const UserDelete = (props,{setHasCookie}) => {
     const [open, setOpen] = useState(false);
 
     const deleteUser = (id) => {

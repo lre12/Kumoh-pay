@@ -116,7 +116,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function UserDetailView(props) {
+export default function UserDetailView(props, {setHasCookie}) {
   const classes = useStyles();
   const [data, setData] = React.useState(0);
   const [page, setPage] = React.useState(0);
@@ -187,7 +187,7 @@ export default function UserDetailView(props) {
           alignItems="flex-end"
           >
           <Grid className={classes.button}>
-            <UserGroupChange id={props.id} userGroup={props.userGroup} permit={props.permit}/>
+            <UserGroupChange setHasCookie = {setHasCookie} id={props.id} userGroup={props.userGroup} permit={props.permit}/>
           </Grid>
           <Grid className={classes.button}>
             <Button variant="contained" color="primary">거래 내역 조회</Button>

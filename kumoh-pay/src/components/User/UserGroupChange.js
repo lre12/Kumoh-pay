@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function UserGroupChange(props) {
+export default function UserGroupChange(props,{setHasCookie}) {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);

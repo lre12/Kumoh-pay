@@ -52,7 +52,7 @@ const rows = [
 
 let count = 0;
 
-export default function PresentView() {
+export default function PresentView({ setHasCookie}) {
   const classes = useStyles();
 
   const [data, setData] = useState([]);

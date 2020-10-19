@@ -5,8 +5,7 @@ import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper'
-import { observer } from "mobx-react"
-import Store from './Store';
+import { post } from 'axios';
 
 
 const useStyles = makeStyles(theme => ({
@@ -38,12 +37,25 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Login = observer(({ setHasCookie }) => {
+const Login = (({ setHasCookie }) => {
   const classes = useStyles();
   const [userId, setUserId] = useState('aa');
   const [userPw, setUserPw] = useState('bb');
 
-  const store = useContext(Store.context)
+
+
+  const loginApi = async (userId, userPw) => {
+    const url = '/api/login';
+    let res;
+    await post(url, {
+      id: userId,
+      pwd: userPw,
+    }).then(function (response) {
+      res = response;
+      console.log(response);
+    })
+    return res;
+  }
 
   const handleSubmit = async (e) => {
     console.log(userId);
@@ -53,7 +65,7 @@ const Login = observer(({ setHasCookie }) => {
       return;
     }
     try {
-      const response = await store.loginApi(userId, userPw);
+      const response = await loginApi(userId, userPw);
       console.log(response);
       if (response.data.result === 'ok') {
         setHasCookie(true);

@@ -43,7 +43,7 @@ const rows = [
 
 let count = 0;
 
-export default function CalculateView() {
+export default function CalculateView({ setHasCookie}) {
   const classes = useStyles();
   const [data, setData] = React.useState([]);
 
