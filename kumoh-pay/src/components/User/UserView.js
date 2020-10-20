@@ -149,7 +149,6 @@ export default function UserView({ setHasCookie}) {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("id");
   const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(20);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchKey, setSearchKey] = useState('id');
   const [userGroups, setUserGroups] = useState("판매자");
@@ -165,43 +164,37 @@ export default function UserView({ setHasCookie}) {
     setPage(value);
   };
 
-  const handleChangeData = async () => {
-    { searchKeyword === "" ?
-      handleDataAll():
-      handleData()
-    }
-  };
+  const handleChangeData = async () => { searchKeyword === "" ? handleDataAll(): handleData() };
 
   useEffect(() => {
-    { parseInt(data.length, 10) > 0 ?
+    parseInt(data.length, 10) > 0 ?
       setCount(Math.ceil((data.length + 1) / pageSize)) :
       setCount(1)
-    }
   }, [data, pageSize]);
 
   const handleDataAll = async () => {
     await fetch("/api/users")
     .then((response) => response.json())
-    .then((data) => {
+    .then((data) => 
         setData(data)
-    })
+    )
     .catch(err => console.log(err));
   };
 
   const handleData = () => {
-    { if(userGroups == "전체"){
+    if(userGroups === "전체"){
       handleAllSearch()
-    }else if(userGroups == "판매자"){
+    }else if(userGroups === "판매자"){
       handleSellerSearch()
     }else{
       handleUserSearch()
-    };}
+    };
     setOpen(false)
     console.log(count + " " + page);
   };
 
   const handleAllSearch = async () => {
-    { searchKey === "id" ?
+    searchKey === "id" ?
       await fetch("/api/users/all/id/" + searchKeyword)
       .then((response) => response.json())
       .then((data) => {
@@ -209,55 +202,44 @@ export default function UserView({ setHasCookie}) {
       }) :
       await fetch("/api/users/all/name/" + searchKeyword)
       .then((response) => response.json())
-      .then((data) => {
+      .then((data) => 
       setData(data)
-      })
-    }
+      )
   }
 
   const handleSellerSearch = async () => {
-    { searchKey === "id" ?
+    searchKey === "id" ?
       await fetch("/api/users/seller/id/" + searchKeyword)
       .then((response) => response.json())
-      .then((data) => {
+      .then((data) => 
       setData(data)
-      }) :
+      ) :
       await fetch("/api/users/seller/name/" + searchKeyword)
       .then((response) => response.json())
-      .then((data) => {
+      .then((data) => 
       setData(data)
-      })
-    }
+      )
   }
 
   const handleUserSearch = async () => {
-    { searchKey === "id" ?
+    searchKey === "id" ?
       await fetch("/api/users/user/id/" + searchKeyword)
       .then((response) => response.json())
-      .then((data) => {
+      .then((data) => 
       setData(data)
-      }) :
+      ) :
       await fetch("/api/users/user/name/" + searchKeyword)
       .then((response) => response.json())
-      .then((data) => {
+      .then((data) => 
       setData(data)
-      })
-    }
+      )
+    
   }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
   };
 
   const handleSearchKey = (event) => {

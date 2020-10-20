@@ -1,4 +1,4 @@
-import React, {Redirect, useEffect, useState} from 'react';
+import React, {Redirect, useState} from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -24,7 +24,7 @@ import { menuListItems } from './listItems';
 import UserView from './User/UserView';
 import CalculateView from './Calculate/CalculateView';
 import Voucher from './Voucher/Voucher';
-import Login from './Login';
+
 import PresentView from './Present/PresentView';
 
 const drawerWidth = 240;
@@ -90,8 +90,6 @@ const useStyles = makeStyles((theme) => ({
 function Layout({ setHasCookie, removeCookie }) {
   const classes = useStyles();
   const theme = useTheme();
-  const [id, setId] = useState(null);
-  const [charge, setCharge] = useState(null);
   const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => {
@@ -169,7 +167,7 @@ function Layout({ setHasCookie, removeCookie }) {
     );
   }
   else{
-    return <Redirect to='/login'  />
+    return <Redirect to='/login' />
   }
 }
 export default Layout;

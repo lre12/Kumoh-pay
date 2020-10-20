@@ -11,9 +11,9 @@ const VoucherAdd = (props) => {
     const [value, setValue] = useState('');
 
     const addVoucher = () => {
-        { parseInt(props.voucher, 10) + parseInt(value, 10) < 0 ?
+        parseInt(props.voucher, 10) + parseInt(value, 10) < 0 ?
             props.setVoucher(parseInt(0, 10)):
-            props.setVoucher(parseInt(props.voucher + value, 10))}
+            props.setVoucher(parseInt(props.voucher + value, 10))
         setValue('');
         setOpen(false)
     };

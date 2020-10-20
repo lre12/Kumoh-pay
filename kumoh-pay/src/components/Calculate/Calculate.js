@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Calculate = (props) => {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
-    const [data, setData] = React.useState([]);
+    const [open, setOpen] = useState(false);
+    const data= useState([]);
 
     const handleCalculate = () => {
         setOpen(true)

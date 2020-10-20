@@ -55,13 +55,11 @@ let count = 0;
 export default function PresentView({ setHasCookie}) {
   const classes = useStyles();
 
-  const [data, setData] = useState([]);
+  const data = useState([]);//
   const [firstDate, setFirstDate] = useState();
   const [secondDate, setSecondDate] = useState();
 
-  const handleData = async () => {
-
-  }
+  //const handleData = async () => {}
 
   const handleFirstChange = (event) => {
     setFirstDate(event.target.value);

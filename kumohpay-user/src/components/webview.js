@@ -22,7 +22,8 @@ import MainView from './mainView';
 import UpdateInfoView from './UpdateInfoView';
 import GetVoucherView from './GetVoucherView';
 import SendVoucherScanner from './SendVoucherScanner';
-import UserStore from '../stores/UserStore'
+import UserStore from '../stores/UserStore';
+import LastDeal from './LastDeal';
 
 const WebView = ({ setHasCookie, removeCookie },props) => {
   const [id, setId] = useState(null);
@@ -145,6 +146,9 @@ const WebView = ({ setHasCookie, removeCookie },props) => {
                 </Route>
                 <Route path="/sendVoucher">
                   <SendVoucherScanner setHasCookie = {setHasCookie}/>
+                </Route>
+                <Route path ="/lastDeal">
+                  <LastDeal setHasCookie = {setHasCookie}/>
                 </Route>
               </Switch>
             </Container>

@@ -29,12 +29,15 @@ export const mainListItems = (
       <ListItemText primary="상품권 수령" />
     </ListItem>
     </Link>
+    <Link to="/lastDeal" style={{ textDecoration: 'none',  color: 'black'}}>
     <ListItem button>
       <ListItemIcon>
         <SearchIcon />
       </ListItemIcon>
       <ListItemText primary="거래 내역 조회" />
     </ListItem>
+    </Link>
+    
   </div>
 );
 
@@ -56,12 +59,15 @@ export const homeMainListItems = (
       <ListItemText primary="상품권 수령" />
     </ListItem>
     </Link>
+    <Link to="/lastDeal" style={{ textDecoration: 'none',  color: 'black'}}>
     <ListItem button>
       <ListItemIcon>
         <SearchIcon />
       </ListItemIcon>
       <ListItemText primary="거래 내역 조회" />
     </ListItem>
+    </Link>
+    
   </div>
 );
 

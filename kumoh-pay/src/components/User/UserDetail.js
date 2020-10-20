@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -66,10 +66,6 @@ const useStyles = makeStyles ((theme) => ({
   appBar: {
     position: 'relative',
   },
-  title: {
-    marginLeft: theme.spacing(2),
-    flex: 1,
-  },
 }));
 
 const columns = [
@@ -118,10 +114,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function UserDetailView(props, {setHasCookie}) {
   const classes = useStyles();
-  const [data, setData] = React.useState(0);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [open, setOpen] = React.useState(false);
+  //const [data, setData] = useState(0);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
