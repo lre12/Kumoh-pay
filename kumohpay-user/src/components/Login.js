@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const Login = observer(({ setHasCookie }) => {
+const Login = observer(({ setHasCookie },{setWallet}) => {
   const [userId, setUserId] = useState('');
   const [userPw, setUserPw] = useState('');
 

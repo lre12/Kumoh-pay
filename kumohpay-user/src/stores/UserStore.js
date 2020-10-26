@@ -89,5 +89,67 @@ class UserStore{
     })
     return res;
   }
+
+  @action
+  walletEnroll =  async (userID)=>{
+    const url = 'http://110.9.111.90/users'
+    let res;
+    await post(url,{
+      username : userID,
+      orgName : "Org1",
+    }).then(function (response) {
+      res = response;
+      console.log(res)
+    })
+    return res;
+  }
+
+  @action
+  walletLogin= async (userID)=>{
+    const url = '/wallet/users/login'
+    let res;
+    await post(url,{
+      username : userID,
+      orgName : "Org1",
+    }).then(function (response) {
+      res = response;
+      console.log(response);
+    })
+    return res;
+  }
+
+  @action
+  walletPost = async (fcn, args) => {
+    const url = '/channels/:mychannel/chaincodes/:kit_pay'
+    let res;
+    await post(url,{
+      peers : ["peer0.org1.example.com", "peer0.org2.example.com"],
+      fcn : fcn,
+      args : args,
+      transient : 'transient',
+    }).then(function (response) {
+      res = response;
+      console.log(response);
+    })
+    return res;
+  }
+
+  @action
+  walletGet = async (fcn, args) => {
+    const url = '/channels/:mychannel/chaincodes/:kit_pay'
+    let res;
+    await post(url,{
+      params: { 
+        peers : ["peer0.org1.example.com", "peer0.org2.example.com"],
+        fcn : fcn,
+        args : args ,
+      }
+    }).then(function (response) {
+      res = response;
+      console.log(response);
+    })
+    return res;
+  }
+
 }
 export default  UserStore = UserStore.getInstance()

@@ -49,8 +49,10 @@ const WebView = ({ setHasCookie, removeCookie },props) => {
         } else {
           setId(response[0].id);
           setName(response[0].name);
-          setCharge(response[0].charge);
           setUserGroup(response[0].userGroup);
+          const charge = await userStore.walletGet('',id);
+          console.log(charge);
+          setCharge(charge);
         }
       } catch (err) {
         console.log(err);
