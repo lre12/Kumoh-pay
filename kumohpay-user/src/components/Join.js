@@ -52,6 +52,10 @@ const Join = () => {
             console.log(response.data.result);
             if (response.data.result === 'ok') {
                 setJoinSuccess(true);
+            }else if(response.data.result === 'fail1'){
+              alert('존재하는 ID입니다.');
+            }else if(response.data.result === 'fail2'){
+              alert('인증번호가 일치하지 않습니다.')
             }
         } catch (err) {
             console.error('login error', err);
@@ -62,7 +66,7 @@ const Join = () => {
     const sendMail = async (e) => {
         e.preventDefault();
         try{
-            const response = await userStore.sendMail(userMail)
+            const response = await userStore.sendMail(userMail, userId)
             if(response.data.result==='ok'){
                 alert('mail전송완료');
             }
@@ -98,6 +102,7 @@ const Join = () => {
                 autoComplete="user_id"
                 value={userId}
                 onChange={e => setUserId(e.target.value)}
+                autoFocus
               />
             </Grid>
             <Grid item xs={12}>
@@ -125,7 +130,6 @@ const Join = () => {
                 label="이름"
                 value={userName}
                 onChange={e => setUserName(e.target.value)}
-                autoFocus
               />
             </Grid>
             <Grid item xs={12}>

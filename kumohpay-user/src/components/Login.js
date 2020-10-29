@@ -12,7 +12,6 @@ import Container from '@material-ui/core/Container';
 import {observer} from "mobx-react"
 import UserStore from '../stores/UserStore'
 
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -30,14 +29,13 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-  },
+  }
 }));
-
-
 
 const Login = observer(({ setHasCookie },{setWallet}) => {
   const [userId, setUserId] = useState('');
   const [userPw, setUserPw] = useState('');
+
 
   const classes = useStyles();
   const userStore = useContext(UserStore.context)
@@ -109,16 +107,14 @@ const Login = observer(({ setHasCookie },{setWallet}) => {
                 className={classes.submit}
               >
                 로그인
-          </Button>
+              </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
-                    비밀번호 찾기
-              </Link>
+                  <Button variant="conatined" color="blue"  onClick={() => { alert('관리자에게 문의 바랍니다.') }} >비밀번호 찾기</Button>
                 </Grid>
                 <Grid item>
                   <Link to="/join">
-                  {"회원가입"}
+                  <Button>회원가입</Button>
                   </Link>
                 </Grid>
               </Grid>
@@ -126,7 +122,6 @@ const Login = observer(({ setHasCookie },{setWallet}) => {
           </div>
         </Container>
     </div>
-
   );
 })
 export default Login;

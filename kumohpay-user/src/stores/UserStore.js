@@ -78,11 +78,12 @@ class UserStore{
   }
 
   @action
-  sendMail = async (userMail)=> {
+  sendMail = async (userMail, userId)=> {
     const url = '/app/auth/mail';
     let res;
    await post(url,{
       mail : userMail,
+      id : userId,
     }).then(function (response) {
       res = response;
       console.log(response);

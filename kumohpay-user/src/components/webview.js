@@ -2,6 +2,8 @@
 import React, { Redirect, useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -25,22 +27,23 @@ import SendVoucherScanner from './SendVoucherScanner';
 import UserStore from '../stores/UserStore';
 import LastDeal from './LastDeal';
 
-const WebView = ({ setHasCookie, removeCookie },props) => {
+const WebView = ({ setHasCookie, removeCookie }, props) => {
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [charge, setCharge] = useState(null);
   const [userGroup, setUserGroup] = useState(null);
+  const [openDialog, isOpenDialog] = useState(false);
   const userStore = useContext(UserStore.context)
 
   const logout = () => {
     removeCookie();
   };
 
-  
+
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
-    
+
     const onInfoLoad = async () => {
       try {
         const response = await userStore.getInfoApi(signal);
@@ -50,7 +53,7 @@ const WebView = ({ setHasCookie, removeCookie },props) => {
           setId(response[0].id);
           setName(response[0].name);
           setUserGroup(response[0].userGroup);
-          const charge = await userStore.walletGet('',id);
+          const charge = await userStore.walletGet('', id);
           console.log(charge);
           setCharge(charge);
         }
@@ -67,6 +70,14 @@ const WebView = ({ setHasCookie, removeCookie },props) => {
   }, [id, name, charge, userGroup, setHasCookie]);
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const [NotificationCnt, setCnt] = useState(0);
+  const switchDialog = () => {
+    if (openDialog) {
+      isOpenDialog(false)
+    } else {
+      isOpenDialog(true)
+    }
+  }
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -82,7 +93,7 @@ const WebView = ({ setHasCookie, removeCookie },props) => {
     firstList = <List>{homeMainListItems}</List>
     secondList = <List>{homeSecondaryListItems}</List>
   }
-  if(setHasCookie){
+  if (setHasCookie) {
     return (
 
       <BrowserRouter>
@@ -105,8 +116,8 @@ const WebView = ({ setHasCookie, removeCookie },props) => {
               </Link>
               </Typography>
               <IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <NotificationsIcon />
+                <Badge badgeContent={NotificationCnt} color="secondary">
+                  <NotificationsIcon onClick={switchDialog} />
                 </Badge>
               </IconButton>
               <IconButton color="inherit" onClick={logout}>
@@ -136,34 +147,48 @@ const WebView = ({ setHasCookie, removeCookie },props) => {
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container}>
+              {
+                openDialog &&
+                <Card className={classes.root}>
+                  <CardContent>
+                    {NotificationCnt===0&&<Typography className={classes.title} color="textSecondary" gutterBottom>
+                      현재 알림이 없습니다.
+                    </Typography>}
+                    {NotificationCnt!=0&&<Typography className={classes.title} color="textSecondary" gutterBottom>
+                      현재 알림이 {NotificationCnt} 개 있습니다.
+                    </Typography>}
+                    
+                  </CardContent>
+                </Card>
+              }
               <Switch>
                 <Route path="/WebView">
                   <MainView id={id} name={name} charge={charge} userGroup={userGroup} />
                 </Route>
                 <Route path="/update">
-                  <UpdateInfoView setHasCookie = {setHasCookie}/>
+                  <UpdateInfoView setHasCookie={setHasCookie} />
                 </Route>
                 <Route path="/getVoucher">
-                  <GetVoucherView setHasCookie = {setHasCookie}/>
+                  <GetVoucherView setHasCookie={setHasCookie} />
                 </Route>
                 <Route path="/sendVoucher">
-                  <SendVoucherScanner setHasCookie = {setHasCookie}/>
+                  <SendVoucherScanner setHasCookie={setHasCookie} />
                 </Route>
-                <Route path ="/lastDeal">
-                  <LastDeal setHasCookie = {setHasCookie}/>
+                <Route path="/lastDeal">
+                  <LastDeal setHasCookie={setHasCookie} />
                 </Route>
               </Switch>
             </Container>
-  
-  
+
+
           </main>
         </div>
       </BrowserRouter>
     );
   }
-  else{
-    return <Redirect to='/login'  />
+  else {
+    return <Redirect to='/login' />
   }
-  
+
 }
 export default WebView;

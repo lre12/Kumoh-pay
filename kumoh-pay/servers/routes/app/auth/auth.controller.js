@@ -8,7 +8,8 @@ const title = "금오페이 인증번호"
 let ranNum = 0;
 const config = require('../../../config')
 const crypto = require('crypto');
-
+var HashMap = require('hashmap');
+var map = new HashMap();
 
 
 const mailPoster = nodeMailer.createTransport({
@@ -50,8 +51,8 @@ function getRandomInt(min, max) {
 
 exports.createToken = function (req, res, next) {
     try {
-        let id = req.body.id;
-        let inputpwd = req.body.pwd;
+        let id = req.body.id
+        let inputpwd = req.body.pwd
         const secret = req.app.get('jwt-secret')
         var DBuserExist = "SELECT EXISTS (SELECT * FROM USER WHERE id =" + '"' + id + '"' + ") AS SUCCESS";
         var DBuserCheck = "SELECT * FROM USER WHERE id =" + '"' + id + '"';
@@ -92,8 +93,8 @@ exports.createToken = function (req, res, next) {
                 })
             }
         })
-        
-        
+
+
     }
     catch (ex) {
         console.log('Message from Catch is ----->>>> ' + ex);
@@ -104,9 +105,10 @@ exports.createToken = function (req, res, next) {
 exports.createNewUser = function (req, res, next) {
     try {
         let num = req.body.ranNum
-        if (ranNum === num) {
+        const id = req.body.id
+        if (map.get(String(id)) === num) {
+            map.delete(String(id))
             const secret = req.app.get('jwt-secret')
-            const id = req.body.id
             const inputpwd = req.body.pwd
             const name = req.body.name
             crypto.randomBytes(64, (err, buf) => {
@@ -118,40 +120,47 @@ exports.createNewUser = function (req, res, next) {
                 let hashPassword = crypto.createHash("sha512").update(inputpwd + salt).digest("hex");
                 console.log(hashPassword);
                 console.log(salt);
-
-                let sql = 'INSERT INTO USER (id, password, name, salt, userGroup, permit, charge, recentUseDate, createdDate, isDeleted) VALUES (' + id + ', ' + '"' + hashPassword + '"' + ', ' + '"' + name + '"' + ',' + '"' + salt + '"' + ',' + "'학생'" + ', 1, 0, now(), now(), 0)'
-                console.log(sql);
-                connection.query(sql,
-                    (err, rows, fields) => {
-                        if (err) {
-                            console.log(err)
-                            throw err;
-                        }
-                        const token = jwt.sign({
-                            user_id: id
-                        }, secret, {
-                            expiresIn: '1h'
-                        });
-                        res.cookie('user', token, {
-                            maxAge: 60 * 60 * 1000,
-                            httpOnly: true,
-                            secure: true
-                        }
-                        );
-                        res.send({
-                            result: 'ok',
-                            token
-                        });
-                        console.log(rows)
+                var DBuserExist = "SELECT EXISTS (SELECT * FROM USER WHERE id =" + '"' + id + '"' + ") AS SUCCESS";
+                connection.query(DBuserExist, function (err, data) {
+                    if (data[0].SUCCESS == 1) {
+                        res.send({ result: 'fail1' })
+                    } else {
+                        let sql = 'INSERT INTO USER (id, password, name, salt, userGroup, permit, charge, recentUseDate, createdDate, isDeleted) VALUES (' + id + ', ' + '"' + hashPassword + '"' + ', ' + '"' + name + '"' + ',' + '"' + salt + '"' + ',' + "'학생'" + ', 1, 0, now(), now(), 0)'
+                        console.log(sql);
+                        connection.query(sql,
+                            (err, rows, fields) => {
+                                if (err) {
+                                    console.log(err)
+                                    throw err;
+                                }
+                                const token = jwt.sign({
+                                    user_id: id
+                                }, secret, {
+                                    expiresIn: '1h'
+                                });
+                                res.cookie('user', token, {
+                                    maxAge: 60 * 60 * 1000,
+                                    httpOnly: true,
+                                    secure: true
+                                }
+                                );
+                                res.send({
+                                    result: 'ok',
+                                    token
+                                });
+                                console.log(rows)
+                            }
+                        )
                     }
-                )
+                })
+                
 
             });
 
 
 
         } else {
-            res.send({ result: 'fail' })
+            res.send({ result: 'fail2' })
         }
 
     } catch (err) {
@@ -163,10 +172,13 @@ exports.createNewUser = function (req, res, next) {
 exports.email = function (req, res, next) {
     try {
         const mailid = req.body.mail;
-        mail = mailid.concat("@naver.com")
+        const userId = req.body.id;
+
+        mail = mailid.concat("@kumoh.ac.kr")
         //금오웹메일로 바꾸기
         console.log(mail)
         ranNum = String(getRandomInt(1000, 9999))
+        map.set(String(userId), ranNum);
         const mailOption = mailOpt(mail, title, ranNum);
         sendMail(mailOption)
         res.send({ result: 'ok' })

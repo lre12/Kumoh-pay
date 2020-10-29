@@ -64,7 +64,7 @@ const GetVoucherView = ({ setHasCookie, removeCookie }) => {
     <Typography className={classes.title} color="textSecondary" gutterBottom>
           {bull}상품권 수령 QR코드
         </Typography>
-        <QRCode size = "140" value={url} />
+        <QRCode size = "100" value={url} />
     </CardContent>
     </Card>
     </div>

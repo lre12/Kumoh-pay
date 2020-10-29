@@ -33,11 +33,12 @@ const App = () => {
             setHasCookie(true);
         }
     }, [cookies]);
-    if(!hasCookie){
-    // if(!hasCookie&&device_check()){
+    // if(!hasCookie){
+    if(!hasCookie&&device_check()){
         return(
             <BrowserRouter>
             <Redirect to="/login" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <Route
                     exact path="/login"
                     render={routerProps => {
@@ -59,11 +60,12 @@ const App = () => {
         )
         
     }
-    else{
-    // else if(device_check()){
+    // else{
+    else if(device_check()){
         return(
             <BrowserRouter>
             <Redirect to="/WebView" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
              <Route
                     exact path="/WebView"
                     render={routerProps => {
@@ -83,13 +85,13 @@ const App = () => {
             
         )
     }
-    // else{
-    //     return(
-    //         <div>
-    //             보안상의 이유로 PC로는 접속할 수 없습니다.
-    //         </div>
-    //     )
-    // }
+    else{
+        return(
+            <div>
+                보안상의 이유로 PC로는 접속할 수 없습니다.
+            </div>
+        )
+    }
 };
 export default withCookies(App);
 
