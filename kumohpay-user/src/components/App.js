@@ -94,5 +94,3 @@ const App = () => {
     }
 };
 export default withCookies(App);
-
-
