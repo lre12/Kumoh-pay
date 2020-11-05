@@ -1,10 +1,10 @@
-import { action } from 'mobx';
+import { action, observable } from 'mobx';
 import {createContext} from "react";
 import { post } from 'axios';
 
 class UserStore{
-  static instance = null;
 
+  static instance = null;
   static getInstance () {
     if (!UserStore.instance) 
       this.instance = new UserStore();
@@ -13,8 +13,6 @@ class UserStore{
   constructor(){
     this.context = createContext(this)
   }
-
-  
   
   @action 
   loginApi = async (userId, userPw) => {
@@ -93,14 +91,15 @@ class UserStore{
 
   @action
   walletEnroll =  async (userID)=>{
-    const url = 'http://110.9.111.90/users'
+    const url = '/wallet/users'
     let res;
+    console.log(userID)
     await post(url,{
-      username : userID,
-      orgName : "Org1",
+      "username" : userID,
+      "orgName" : "Org1",
     }).then(function (response) {
       res = response;
-      console.log(res)
+      console.log(res.data.token);
     })
     return res;
   }
@@ -120,24 +119,27 @@ class UserStore{
   }
 
   @action
-  walletPost = async (fcn, args) => {
-    const url = '/channels/:mychannel/chaincodes/:kit_pay'
+  walletPost = async (fcn, args, token) => {
+    const url = '/wallet/channels/:mychannel/chaincodes/:kit_pay'
     let res;
     await post(url,{
       peers : ["peer0.org1.example.com", "peer0.org2.example.com"],
       fcn : fcn,
       args : args,
       transient : 'transient',
-    }).then(function (response) {
+    }, {
+      headers: {
+        'Authorization': `Basic ${token}` 
+      }}).then(function (response) {
       res = response;
-      console.log(response);
+      console.log(response.data.token);
     })
     return res;
   }
 
   @action
-  walletGet = async (fcn, args) => {
-    const url = '/channels/:mychannel/chaincodes/:kit_pay'
+  walletGet = async (fcn, args,token) => {
+    const url = '/wallet/channels/:mychannel/chaincodes/:kit_pay'
     let res;
     await post(url,{
       params: { 
@@ -145,12 +147,15 @@ class UserStore{
         fcn : fcn,
         args : args ,
       }
+    },{
+      headers: {
+        'Authorization': `Basic ${token}` 
+      }
     }).then(function (response) {
       res = response;
       console.log(response);
     })
     return res;
   }
-
 }
 export default  UserStore = UserStore.getInstance()

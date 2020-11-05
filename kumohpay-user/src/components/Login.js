@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Login = observer(({ setHasCookie },{setWallet}) => {
+const Login = observer(({ setHasCookie, setWallet}) => {
   const [userId, setUserId] = useState('');
   const [userPw, setUserPw] = useState('');
 
@@ -51,10 +51,13 @@ const Login = observer(({ setHasCookie },{setWallet}) => {
       console.log(response);
       if (response.data.result === 'ok') {
         setHasCookie(true);
+        const walletResponse = await userStore.walletEnroll(userId);
+        console.log(walletResponse.data.token);
+        setWallet(walletResponse.data.token);
       } else {
         throw new Error(response.error);
       }
-    } catch (err) {
+    } catch (err) { 
       alert('로그인에 실패했습니다.');
       setUserId('');
       setUserPw('');

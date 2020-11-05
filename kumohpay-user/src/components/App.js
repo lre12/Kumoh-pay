@@ -23,18 +23,17 @@ function device_check() {
     }
 }
 
-
-
 const App = () => {
-    const [cookies, removeCookie] = useCookies(['user']);
+    const [cookies, removeCookie] = useCookies(['login']);
     const [hasCookie, setHasCookie] = useState(false);
+    const [wallet, setWallet] = useState(null);
     useEffect(() => {
         if (cookies.user && cookies.user !== 'undefined') {
             setHasCookie(true);
         }
     }, [cookies]);
-    // if(!hasCookie){
-    if(!hasCookie&&device_check()){
+    if(!hasCookie){
+    // if(!hasCookie&&device_check()){
         return(
             <BrowserRouter>
             <Redirect to="/login" />
@@ -46,6 +45,7 @@ const App = () => {
                             <Login
                                 {...routerProps}
                                 setHasCookie={setHasCookie}
+                                setWallet={setWallet}
                             />
                         );
                     }}
@@ -60,8 +60,8 @@ const App = () => {
         )
         
     }
-    // else{
-    else if(device_check()){
+    else{
+    // else if(device_check()){
         return(
             <BrowserRouter>
             <Redirect to="/WebView" />
@@ -73,6 +73,7 @@ const App = () => {
                             <WebView
                                 {...routerProps}
                                 setHasCookie={setHasCookie}
+                                wallet = {wallet}
                                 removeCookie={() => {
                                     removeCookie('user');
                                     setHasCookie(false);
@@ -85,12 +86,12 @@ const App = () => {
             
         )
     }
-    else{
-        return(
-            <div>
-                보안상의 이유로 PC로는 접속할 수 없습니다.
-            </div>
-        )
-    }
+    // else{
+    //     return(
+    //         <div>
+    //             보안상의 이유로 PC로는 접속할 수 없습니다.
+    //         </div>
+    //     )
+    // }
 };
 export default withCookies(App);

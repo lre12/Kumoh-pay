@@ -27,7 +27,7 @@ import SendVoucherScanner from './SendVoucherScanner';
 import UserStore from '../stores/UserStore';
 import LastDeal from './LastDeal';
 
-const WebView = ({ setHasCookie, removeCookie }, props) => {
+const WebView = ({ setHasCookie, wallet, removeCookie }, props) => {
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [charge, setCharge] = useState(null);
@@ -53,8 +53,8 @@ const WebView = ({ setHasCookie, removeCookie }, props) => {
           setId(response[0].id);
           setName(response[0].name);
           setUserGroup(response[0].userGroup);
+          console.log(wallet);
           const charge = await userStore.walletGet('', id);
-          console.log(charge);
           setCharge(charge);
         }
       } catch (err) {
@@ -95,7 +95,6 @@ const WebView = ({ setHasCookie, removeCookie }, props) => {
   }
   if (setHasCookie) {
     return (
-
       <BrowserRouter>
         <div className={classes.root}>
           <CssBaseline />
@@ -179,8 +178,6 @@ const WebView = ({ setHasCookie, removeCookie }, props) => {
                 </Route>
               </Switch>
             </Container>
-
-
           </main>
         </div>
       </BrowserRouter>
