@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const verifyToken = (req, res, next) => {
     try {
         const secret = req.app.get('jwt-secret')
-       
         const clientToken = req.cookies.user;
         const decoded = jwt.verify(clientToken, secret);
         if (decoded) {

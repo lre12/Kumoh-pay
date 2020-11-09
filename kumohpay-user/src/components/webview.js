@@ -27,7 +27,7 @@ import SendVoucherScanner from './SendVoucherScanner';
 import UserStore from '../stores/UserStore';
 import LastDeal from './LastDeal';
 
-const WebView = ({ setHasCookie, wallet, removeCookie }, props) => {
+const WebView = ({ setHasCookie, removeCookie }, props) => {
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [charge, setCharge] = useState(null);
@@ -53,11 +53,9 @@ const WebView = ({ setHasCookie, wallet, removeCookie }, props) => {
           setId(response[0].id);
           setName(response[0].name);
           setUserGroup(response[0].userGroup);
-          if(wallet!=null){
-            console.log("wallet"+wallet);
-            const charge = await userStore.walletGet("queryPoint", id,wallet);
-          }
-          setCharge(charge);
+          // const charge = await userStore.walletGet("getHistory", id);
+          // setCharge(charge.result.amount);
+          // console.log(charge)
         }
       } catch (err) {
         console.log(err);

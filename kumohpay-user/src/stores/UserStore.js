@@ -136,7 +136,7 @@ class UserStore{
 
   @action
   walletGet = async (fcn, args) => {
-    const url = '/wallet/channels/:mychannel/chaincodes/:kit_pay'
+    const url = '/wallet/channels/mychannel/chaincodes/kit_pay'
     let res;
     await get(url,{
       params: { 

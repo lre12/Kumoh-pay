@@ -26,7 +26,6 @@ function device_check() {
 const App = () => {
     const [cookies, removeCookie] = useCookies(['user']);
     const [hasCookie, setHasCookie] = useState(false);
-    const [wallet, setWallet] = useState(null);
     useEffect(() => {
         if (cookies.user && cookies.user !== 'undefined') {
             setHasCookie(true);
@@ -45,7 +44,6 @@ const App = () => {
                             <Login
                                 {...routerProps}
                                 setHasCookie={setHasCookie}
-                                setWallet={setWallet}
                             />
                         );
                     }}
@@ -73,7 +71,6 @@ const App = () => {
                             <WebView
                                 {...routerProps}
                                 setHasCookie={setHasCookie}
-                                wallet = {wallet}
                                 removeCookie={() => {
                                     removeCookie('user');
                                     setHasCookie(false);
