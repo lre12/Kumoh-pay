@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx';
 import {createContext} from "react";
-import { post } from 'axios';
+import { post, get } from 'axios';
 
 class UserStore{
 
@@ -119,7 +119,7 @@ class UserStore{
   }
 
   @action
-  walletPost = async (fcn, args, token) => {
+  walletPost = async (fcn, args) => {
     const url = '/wallet/channels/:mychannel/chaincodes/:kit_pay'
     let res;
     await post(url,{
@@ -127,10 +127,7 @@ class UserStore{
       fcn : fcn,
       args : args,
       transient : 'transient',
-    }, {
-      headers: {
-        'Authorization': `Basic ${token}` 
-      }}).then(function (response) {
+    }).then(function (response) {
       res = response;
       console.log(response.data.token);
     })
@@ -138,18 +135,14 @@ class UserStore{
   }
 
   @action
-  walletGet = async (fcn, args,token) => {
+  walletGet = async (fcn, args) => {
     const url = '/wallet/channels/:mychannel/chaincodes/:kit_pay'
     let res;
-    await post(url,{
+    await get(url,{
       params: { 
         peers : ["peer0.org1.example.com", "peer0.org2.example.com"],
         fcn : fcn,
         args : args ,
-      }
-    },{
-      headers: {
-        'Authorization': `Basic ${token}` 
       }
     }).then(function (response) {
       res = response;

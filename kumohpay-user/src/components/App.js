@@ -24,7 +24,7 @@ function device_check() {
 }
 
 const App = () => {
-    const [cookies, removeCookie] = useCookies(['login']);
+    const [cookies, removeCookie] = useCookies(['user']);
     const [hasCookie, setHasCookie] = useState(false);
     const [wallet, setWallet] = useState(null);
     useEffect(() => {

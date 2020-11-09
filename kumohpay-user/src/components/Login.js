@@ -51,8 +51,9 @@ const Login = observer(({ setHasCookie, setWallet}) => {
       console.log(response);
       if (response.data.result === 'ok') {
         setHasCookie(true);
-        const walletResponse = await userStore.walletEnroll(userId);
-        console.log(walletResponse.data.token);
+        const walletResponse = await userStore.walletEnroll(userId)
+        const getResponse = await userStore.walletGet("queryPoint", userId);
+        console.log(getResponse);
         setWallet(walletResponse.data.token);
       } else {
         throw new Error(response.error);
