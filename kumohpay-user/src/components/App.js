@@ -26,6 +26,7 @@ function device_check() {
 const App = () => {
     const [cookies, removeCookie] = useCookies(['user']);
     const [hasCookie, setHasCookie] = useState(false);
+    const [point, setPoint] = useState('')
     useEffect(() => {
         if (cookies.user && cookies.user !== 'undefined') {
             setHasCookie(true);
@@ -39,10 +40,11 @@ const App = () => {
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <Route
                     exact path="/login"
-                    render={routerProps => {
+                    render={routerProps => {    
                         return (
                             <Login
                                 {...routerProps}
+                                setPoint = {setPoint}
                                 setHasCookie={setHasCookie}
                             />
                         );
@@ -71,6 +73,7 @@ const App = () => {
                             <WebView
                                 {...routerProps}
                                 setHasCookie={setHasCookie}
+                                point={point}
                                 removeCookie={() => {
                                     removeCookie('user');
                                     setHasCookie(false);

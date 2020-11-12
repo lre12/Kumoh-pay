@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Login = observer(({ setHasCookie}) => {
+const Login = observer(({ setHasCookie, setPoint}) => {
   const [userId, setUserId] = useState('');
   const [userPw, setUserPw] = useState('');
 
@@ -50,9 +50,10 @@ const Login = observer(({ setHasCookie}) => {
       const response = await userStore.loginApi(userId,userPw);
       console.log(response);
       if (response.data.result === 'ok') {
-        const walletResponse = await userStore.walletEnroll(userId).then(setHasCookie(true));
-        const getResponse = await userStore.walletGet("getHistory", userId);
-        console.log(getResponse);
+        await userStore.walletEnroll(userId).then(setHasCookie(true));
+        const getResponse = await userStore.walletGet("queryPoint", userId);
+        await console.log(getResponse.data.result.Amount);
+        await setPoint(getResponse.data.result.Amount)
       } else {
         throw new Error(response.error);
       }

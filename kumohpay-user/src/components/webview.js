@@ -27,10 +27,9 @@ import SendVoucherScanner from './SendVoucherScanner';
 import UserStore from '../stores/UserStore';
 import LastDeal from './LastDeal';
 
-const WebView = ({ setHasCookie, removeCookie }, props) => {
+const WebView = ({ setHasCookie,point, removeCookie }, props) => {
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
-  const [charge, setCharge] = useState(null);
   const [userGroup, setUserGroup] = useState(null);
   const [openDialog, isOpenDialog] = useState(false);
   const userStore = useContext(UserStore.context)
@@ -67,7 +66,7 @@ const WebView = ({ setHasCookie, removeCookie }, props) => {
     return () => {
       abortController.abort();
     }
-  }, [id, name, charge, userGroup, setHasCookie]);
+  }, [id, name, userGroup, setHasCookie]);
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [NotificationCnt, setCnt] = useState(0);
@@ -162,7 +161,7 @@ const WebView = ({ setHasCookie, removeCookie }, props) => {
               }
               <Switch>
                 <Route path="/WebView">
-                  <MainView id={id} name={name} charge={charge} userGroup={userGroup} />
+                  <MainView id={id} name={name} charge={point} userGroup={userGroup} />
                 </Route>
                 <Route path="/update">
                   <UpdateInfoView setHasCookie={setHasCookie} />

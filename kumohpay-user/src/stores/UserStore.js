@@ -99,7 +99,6 @@ class UserStore{
       "orgName" : "Org1",
     }).then(function (response) {
       res = response;
-      console.log(res.data.token);
     })
     return res;
   }
