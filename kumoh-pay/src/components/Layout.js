@@ -1,4 +1,4 @@
-import React, {Redirect, useState} from 'react';
+import React, {Redirect, useState, useEffect} from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -87,20 +87,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Layout({ setHasCookie, removeCookie }) {
+function Layout({ setHasCookie, point, removeCookie }) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const [openVoucher, setOpenVoucher] = useState(false);
+
+  useEffect(() => {
+    console.log(point);
+  });
+
+  const logout = () => {
+    removeCookie();
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
   };
-  const logout = () => {
-    removeCookie();
-  };
+
   const handleDrawerClose = () => {
-    setOpen(false); 
+    setOpen(false);
   };
+
+  const handleVoucher = () => {
+    open ? setOpen(false) : setOpen(true);
+  };
+
   if(setHasCookie){
     return (
       <Router>
@@ -124,9 +136,12 @@ function Layout({ setHasCookie, removeCookie }) {
               </IconButton>
               <Typography variant="h6" className={classes.titleApp}>
                   <Link to="/home" style={{textDecoration: 'none', color: 'white'}}>
-                          금오페이 관리 시스템
+                    금오페이 관리 시스템
                   </Link>
               </Typography>
+              <Button onClick={handleVoucher} color="inherit">
+                  상품권보유량
+              </Button>
               <Button onClick={logout} focus="right" color="inherit" href="/login">
                   로그아웃
               </Button>
@@ -155,7 +170,7 @@ function Layout({ setHasCookie, removeCookie }) {
           })}
         >
           <div className={classes.drawerHeader} />
-          <Voucher />
+          <Voucher myVoucher={point}/>
           <Switch>
             <Route path="/user"><UserView setHasCookie = {setHasCookie}/></Route>
             <Route path="/present"><PresentView setHasCookie = {setHasCookie}/></Route>

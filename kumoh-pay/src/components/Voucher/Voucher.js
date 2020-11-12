@@ -7,6 +7,11 @@ import Typography from "@material-ui/core/Typography";
 import VoucherDelete from "./VoucherDelete"
 import VoucherAdd from "./VoucherAdd"
 
+import Grid from '@material-ui/core/Grid';
+import CloseIcon from '@material-ui/icons/Close';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import IconButton from '@material-ui/core/IconButton';
+
 const useStyles = makeStyles({
   card: {
     position: "absolute",
@@ -25,27 +30,46 @@ const useStyles = makeStyles({
     fontSize: 24,
     textAlign: "center"
   },
-  pos: {
-    marginBottom: 12,
-    textAlign: "center"
-  },
   button: {
     justifyContent: "center",
-  }
+  },
 });
 
-export default function Voucher() {
+const Voucher = ( { myVoucher } ) => {
   const classes = useStyles();
-  const [voucher, setVoucher] = useState(0);
+  const [voucher, setVoucher] = useState(myVoucher);
 
   return (
     <Card className={classes.card}>
       <CardContent>
+      <Grid container spacing={3}>
+      <Grid item xs={2}>
+      <IconButton
+        color="inherit"
+        aria-label="close card"
+        size="small"
+        >
+          <RefreshIcon className={classes.icon} style={{ fontSize: 15 }} />
+        </IconButton>
+      </Grid>
+        <Grid item xs={8}>
         <Typography className={classes.title} gutterBottom>
           상품권 보유량
         </Typography>
+
+        </Grid>
+        <Grid item xs={2}>
+        <IconButton
+        color="inherit"
+        aria-label="close card"
+        size="small"
+        >
+          <CloseIcon className={classes.icon} style={{ fontSize: 15 }}/>
+        </IconButton>
+        </Grid>
+        </Grid>
         <Typography className={classes.charge} variant="h5" component="h2">
-          {voucher}원
+          {myVoucher}원
         </Typography>
       </CardContent>
       <CardActions className={classes.button}>
@@ -55,3 +79,4 @@ export default function Voucher() {
     </Card>
   );
 }
+export default Voucher;

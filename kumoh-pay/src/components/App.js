@@ -8,6 +8,7 @@ import Login from './Login';
 const App = () => {
   const [cookies, removeCookie] = useCookies(['user']);
   const [hasCookie, setHasCookie] = useState(false);
+  const [point, setPoint] = useState('');
   useEffect(() => {
     if (cookies.user && cookies.user !== 'undefined') {
         setHasCookie(true);
@@ -24,16 +25,17 @@ const App = () => {
                     return (
                         <Login
                             {...routerProps}
+                            setPoint = {setPoint}
                             setHasCookie={setHasCookie}
                         />
                     );
                 }}
             />
-        
+
         </BrowserRouter>
-        
+
     )
-    
+
 }
 else{
     return(
@@ -47,6 +49,7 @@ else{
                   <Layout
                   {...routerProps}
                   setHasCookie={setHasCookie}
+                  point={point}
                   removeCookie={() => {
                     removeCookie('user');
                     setHasCookie(false);
@@ -57,7 +60,7 @@ else{
             }}
           />
         </BrowserRouter>
-        
+
     )
 }
 }
