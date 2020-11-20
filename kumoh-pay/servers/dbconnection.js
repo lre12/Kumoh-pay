@@ -9,7 +9,7 @@ const connection = mysql.createPool({
     user: conf.user,
     password: conf.password,
     port: conf.port,
-    database: conf.database
+    database: conf.database,
 });
 
 module.exports=connection;

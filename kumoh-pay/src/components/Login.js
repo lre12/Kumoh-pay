@@ -5,7 +5,9 @@ import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper'
-import { post, get } from 'axios';
+import {walletEnroll, walletGet} from './Wallet';
+import { post } from 'axios';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -37,52 +39,25 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const loginApi = async (userId, userPw) => {
-  const url = '/api/login';
-  let res;
-  await post(url, {
-    id: userId,
-    pwd: userPw,
-  }).then(function (response) {
-    res = response;
-    console.log(response);
-  })
-  return res;
-}
 
-const walletEnroll = async (userId) => {
-  const url = '/wallet/users';
-  let res;
-  console.log(userId);
-  await post(url, {
-    "username" : userId,
-    "orgName" : "Org1",
-  }).then(function (response) {
-    res = response;
-  })
-  return res;
-}
 
-const walletGet = async (fcn, args) => {
-  const url = '/wallet/channels/mychannel/chaincodes/kit_pay';
-  let res;
-  await get(url, {
-    params: {
-      peers: ["peer0.org1.example.com", "peer0.org2.example.com"],
-      fcn: fcn,
-      args: args,
-    }
-  }).then(function (response) {
-    res = response;
-    console.log(response);
-  });
-  return res;
-}
-
-const Login = (({ setHasCookie, setPoint}) => {
+const Login = (({ setHasCookie, setId, setPoint }) => {
   const classes = useStyles();
   const [userId, setUserId] = useState('');
   const [userPw, setUserPw] = useState('');
+
+  const loginApi = async (userId, userPw) => {
+    const url = '/api/login';
+    let res;
+    await post(url, {
+      id: userId,
+      pwd: userPw,
+    }).then(function (response) {
+      res = response;
+      console.log(response);
+    })
+    return res;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,12 +66,12 @@ const Login = (({ setHasCookie, setPoint}) => {
     }
     try {
       const response = await loginApi(userId, userPw);
-      console.log(response);
       if (response.data.result === 'ok') {
+        await setId(userId);
         await walletEnroll(userId).then(setHasCookie(true));
         const getResponse = await walletGet("queryPoint", userId);
-        await console.log(getResponse);
-        await setPoint(getResponse.data.result.Amount);
+        await console.log(getResponse.data.result.Amount);
+        await setPoint(getResponse.data.result.Amount)
       } else {
         throw new Error(response.error);
       }

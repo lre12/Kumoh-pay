@@ -43,12 +43,17 @@ const Join = () => {
     const [userMail, setUserMail] = useState('');
     const [authNumber, setAuthNumber] = useState('');
     const [isJoinSuccess, setJoinSuccess] = useState(false);
+    const [userType, setUserType] = useState("학생");
     const userStore = useContext(UserStore.context)
       
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await userStore.createUserApi(userId,userPw,userName,authNumber);
+          var response;
+            if(userType === "학생")
+              response = await userStore.createUserApi(userId,userPw,userName,authNumber,true);
+            else
+              response = await userStore.createUserApi(userId,userPw,userName,authNumber,false);
             console.log(response.data.result);
             if (response.data.result === 'ok') {
                 setJoinSuccess(true);
@@ -73,6 +78,10 @@ const Join = () => {
         } catch(err){
             alert('mail전송실패')
         }
+    }
+
+    const typeChange = (e) =>{
+      setUserType(e.target.value);
     }
 
     const classes = useStyles();
@@ -167,6 +176,31 @@ const Join = () => {
               />
             </Grid>
           </Grid>
+          <div className="form-check">
+          <label>
+            <input
+              type="radio"
+              name="userSelect"
+              value="학생"
+              checked={true}
+              onChange={typeChange}
+              className="form-check-input"
+            />
+            학생
+          </label>
+        </div>
+        <div className="form-check">
+          <label>
+            <input
+              type="radio"
+              name="userSelect"
+              value="판매자"
+              onChange={typeChange}
+              className="form-check-input"
+            />
+            판매자
+          </label>
+        </div>
           <Button
             type="submit"
             fullWidth

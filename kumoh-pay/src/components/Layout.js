@@ -11,6 +11,7 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import { Link } from "react-router-dom";
+import { post } from 'axios';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -26,6 +27,7 @@ import CalculateView from './Calculate/CalculateView';
 import Voucher from './Voucher/Voucher';
 
 import PresentView from './Present/PresentView';
+import { walletGet, walletPost } from './Wallet';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -87,15 +89,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Layout({ setHasCookie, point, removeCookie }) {
+function Layout({ setHasCookie, userId, point, setPoint, removeCookie }) {
   const classes = useStyles();
   const theme = useTheme();
+  const [id, setId] = useState(userId);
   const [open, setOpen] = useState(false);
-  const [openVoucher, setOpenVoucher] = useState(false);
 
-  useEffect(() => {
-    console.log(point);
-  });
+
 
   const logout = () => {
     removeCookie();
@@ -107,10 +107,6 @@ function Layout({ setHasCookie, point, removeCookie }) {
 
   const handleDrawerClose = () => {
     setOpen(false);
-  };
-
-  const handleVoucher = () => {
-    open ? setOpen(false) : setOpen(true);
   };
 
   if(setHasCookie){
@@ -139,9 +135,6 @@ function Layout({ setHasCookie, point, removeCookie }) {
                     금오페이 관리 시스템
                   </Link>
               </Typography>
-              <Button onClick={handleVoucher} color="inherit">
-                  상품권보유량
-              </Button>
               <Button onClick={logout} focus="right" color="inherit" href="/login">
                   로그아웃
               </Button>
@@ -170,11 +163,11 @@ function Layout({ setHasCookie, point, removeCookie }) {
           })}
         >
           <div className={classes.drawerHeader} />
-          <Voucher myVoucher={point}/>
+          <Voucher point={point} setPoint={setPoint} userId={id}/>
           <Switch>
-            <Route path="/user"><UserView setHasCookie = {setHasCookie}/></Route>
-            <Route path="/present"><PresentView setHasCookie = {setHasCookie}/></Route>
-            <Route path="/settlement"><CalculateView setHasCookie = {setHasCookie} /></Route>
+            <Route path="/user"><UserView setHasCookie={setHasCookie} userId={id} setPoint={setPoint} /></Route>
+            <Route path="/present"><PresentView userId={id} setHasCookie={setHasCookie}/></Route>
+            <Route path="/settlement"><CalculateView setHasCookie={setHasCookie} /></Route>
           </Switch>
         </main>
       </div>

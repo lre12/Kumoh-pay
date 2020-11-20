@@ -1,5 +1,4 @@
-
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import {walletGet} from '../Wallet';
 
 
 
@@ -38,28 +38,50 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-let count = 0;
-
-export default function PresentView({ setHasCookie}) {
+export default function PresentView({ userId, setHasCookie}) {
   const classes = useStyles();
+  const [isReceive, setIsReceive] = useState(false);
+  const [data, setData] = useState([]);
+  const [firstDate, setFirstDate] = useState(null);
+  const [secondDate, setSecondDate] = useState(null);
+  let count = 0;
 
-  const data = useState([]);//
-  const [firstDate, setFirstDate] = useState();
-  const [secondDate, setSecondDate] = useState();
+  useEffect (() => {
+    handleData();
+  }, [])
 
-  //const handleData = async () => {}
+  useEffect (() => {
+  }, [setData])
+
+  const handleData = async () => {
+    try {
+      const getResponse = await walletGet("getAllHistory", userId);
+      if(await Array.isArray(getResponse.data.result)){
+        await setData(getResponse.data.result);
+      } else {
+        await setData([]);
+      }
+      await console.log(data);
+    } catch(e) {
+
+    }
+
+    if(data !== null) {
+      await setIsReceive(true);
+    }
+  }
+
+  const handleSearchData = async () => {
+    handleData();
+    if (firstDate===null || secondDate==null) {
+      alert("날짜를 입력하세요.");
+    } else {
+      await setData(data.filter(dt => dt.date > firstDate && dt.date < secondDate));
+    }
+    await console.log(firstDate);
+    await console.log(secondDate);
+    await console.log(data);
+  }
 
   const handleFirstChange = (event) => {
     setFirstDate(event.target.value);
@@ -78,39 +100,45 @@ export default function PresentView({ setHasCookie}) {
                 color="inherit"
                 noWrap
             >
-            수여내역 요청
+            수여내역 조회
             </Typography>
         </div>
         <div className={classes.button}>
-            <TextField id="firstDate" type="date" value={firstDate} inputProps={handleFirstChange} />
-            <TextField id="secondDate" type="date" value={secondDate} inputProps={handleSecondChange} />
-            <Button variant="contained" color="primary">검색</Button>
+            <TextField id="firstDate" type="date" value={firstDate} onChange={handleFirstChange} />
+            <TextField id="secondDate" type="date" value={secondDate} onChange={handleSecondChange} />
+            <Button variant="contained" color="primary" onClick={() => {handleSearchData()}}>검색</Button>
+            <Button variant="contained" color="primary" onClick={() => {handleData()}}>전체 조회</Button>
         </div>
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell align="center">번호</TableCell>
-            <TableCell align="center">학번</TableCell>
-            <TableCell align="center">이름</TableCell>
-            <TableCell align="center">보유량</TableCell>
-            <TableCell align="center">지급내역</TableCell>
-            <TableCell align="center">지급일</TableCell>
-            <TableCell align="center">사유</TableCell>
+            <TableCell align="center">보낸이ID</TableCell>
+            <TableCell align="center">받은이ID</TableCell>
+            <TableCell align="center">금액</TableCell>
+            <TableCell align="center">지급날짜</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((user) => (
-            <TableRow key={user.name}>
-                <TableCell align="center">{count}</TableCell>
-                <TableCell align="center">{rows.id}</TableCell>
-                <TableCell align="center">{rows.name}</TableCell>
-                <TableCell align="center">{rows.charge}</TableCell>
-                <TableCell align="center">{rows.present}</TableCell>
-                <TableCell align="center">{rows.presentDate}</TableCell>
-                <TableCell align="center">{rows.etc}</TableCell>
+          { isReceive === true ? (
+          data.map((dt) => (
+            <TableRow key={dt.receiver}>
+                <TableCell align="center">{count=count+1}</TableCell>
+                <TableCell align="center">{dt.sender}</TableCell>
+                <TableCell align="center">{dt.receiver}</TableCell>
+                <TableCell align="center">{dt.amount}원</TableCell>
+                <TableCell align="center">{dt.date}</TableCell>
             </TableRow>
-          ))}
+          ))) : (
+          <TableRow>
+                <TableCell align="center"></TableCell>
+                <TableCell align="center"></TableCell>
+                <TableCell align="center"></TableCell>
+                <TableCell align="center"></TableCell>
+                <TableCell align="center"></TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </TableContainer>

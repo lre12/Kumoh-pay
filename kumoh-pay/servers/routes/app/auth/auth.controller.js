@@ -65,24 +65,30 @@ exports.createToken = function (req, res, next) {
                     }
                     else {
                         console.log(data);
-                        let hashPassword = crypto.createHash("sha512").update(inputpwd + data[0].salt).digest("hex");
-                        console.log(hashPassword);
-                        console.log(data[0].password);
-                        if (hashPassword === data[0].password) {
-                            const token = jwt.sign({
-                                user_id: id
-                            }, secret, {
-                                expiresIn: '1h'
-                            });
-                            res.cookie('user', token);
+                        if(data[0].permit === "승인대기"){
                             res.send({
-                                result: 'ok',
-                                token
-                            });
-                        } else {
-                            res.send({
-                                result: 'fail'
+                                result: 'NoPermit'
                             })
+                        }else{
+                            let hashPassword = crypto.createHash("sha512").update(inputpwd + data[0].salt).digest("hex");
+                            console.log(hashPassword);
+                            console.log(data[0].password);
+                            if (hashPassword === data[0].password) {
+                                const token = jwt.sign({
+                                    user_id: id
+                                }, secret, {
+                                    expiresIn: '1h'
+                                });
+                                res.cookie('user', token);
+                                res.send({
+                                    result: 'ok',
+                                    token
+                                });
+                            } else {
+                                res.send({
+                                    result: 'fail'
+                                })
+                            }
                         }
                     }
                 });
@@ -111,6 +117,7 @@ exports.createNewUser = function (req, res, next) {
             const secret = req.app.get('jwt-secret')
             const inputpwd = req.body.pwd
             const name = req.body.name
+            const isStudent = req.body.type
             crypto.randomBytes(64, (err, buf) => {
                 if (err) {
                     console.log(err);
@@ -125,7 +132,11 @@ exports.createNewUser = function (req, res, next) {
                     if (data[0].SUCCESS == 1) {
                         res.send({ result: 'fail1' })
                     } else {
-                        let sql = 'INSERT INTO USER (id, password, name, salt, userGroup, permit, charge, recentUseDate, createdDate, isDeleted) VALUES (' + id + ', ' + '"' + hashPassword + '"' + ', ' + '"' + name + '"' + ',' + '"' + salt + '"' + ',' + "'학생'" + ', 1, 0, now(), now(), 0)'
+                        let sql;
+                        if(isStudent)
+                            sql = 'INSERT INTO USER (id, password, name, salt, userGroup, permit, charge, recentUseDate, createdDate, isDeleted) VALUES (' + id + ', ' + '"' + hashPassword + '"' + ', ' + '"' + name + '"' + ',' + '"' + salt + '"' + ',' + "'학생'" + ', '+"'승인'"+', 0, now(), now(), 0)'
+                        else
+                            sql = 'INSERT INTO USER (id, password, name, salt, userGroup, permit, charge, recentUseDate, createdDate, isDeleted) VALUES (' + id + ', ' + '"' + hashPassword + '"' + ', ' + '"' + name + '"' + ',' + '"' + salt + '"' + ',' + "'판매자'" + ', '+"'승인대기'"+', 0, now(), now(), 0)'
                         console.log(sql);
                         connection.query(sql,
                             (err, rows, fields) => {

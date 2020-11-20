@@ -5,12 +5,13 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {observer} from "mobx-react"
 import UserStore from '../stores/UserStore'
+import Kit from '../img/KIT.png';
+import '../index.css';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -29,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  img: {
+    height : '50%',
+    width : '50%',
   }
 }));
 
@@ -42,12 +47,13 @@ const Login = observer(({ setHasCookie, setPoint}) => {
 
 
   const handleSubmit = async (e) => {
+    let response;
     e.preventDefault();
     if (!userId || !userPw) {
       return;
     }
     try {
-      const response = await userStore.loginApi(userId,userPw);
+      response = await userStore.loginApi(userId,userPw);
       console.log(response);
       if (response.data.result === 'ok') {
         await userStore.walletEnroll(userId).then(setHasCookie(true));
@@ -58,7 +64,13 @@ const Login = observer(({ setHasCookie, setPoint}) => {
         throw new Error(response.error);
       }
     } catch (err) { 
-      alert('로그인에 실패했습니다.');
+      if(response.data.result === 'NoPermit'){
+        alert('판매자 권한 승인을 받지 못했습니다. 관리자에게 문의하세요.');
+      }else if(response.data.result === 'fail'){
+        alert('아이디 혹은 비밀번호가 일치하지 않습니다.');
+      }else{
+        alert('로그인에 실패했습니다.')
+      }
       setUserId('');
       setUserPw('');
       console.error('login error', err);
@@ -69,9 +81,7 @@ const Login = observer(({ setHasCookie, setPoint}) => {
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
+            <img className={classes.img} src={Kit} alt="금오공대" id="kit-img" />
             <Typography component="h1" variant="h5">
               금오페이 로그인
         </Typography>

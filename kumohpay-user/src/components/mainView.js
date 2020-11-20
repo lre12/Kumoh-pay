@@ -6,10 +6,15 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import LastDeal from './LastDeal';
 
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
+    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+    "&:hover": {
+      boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
+    },
   },
   bullet: {
     display: 'inline-block',
@@ -33,7 +38,8 @@ const MainView = (props) => {
   const classes = useStyles();
   const bull = <span className={classes.bullet}>•</span>;
   return (
-    <Card className={classes.root}>
+    <div>
+      <Card className={classes.root}>
       <CardContent>
         <Typography className={classes.title} color="textSecondary" gutterBottom>
         {bull}사용자 계좌
@@ -56,6 +62,9 @@ const MainView = (props) => {
         <Button className={classes.button}>송금하기</Button>
       </CardActions>
     </Card>
+    <br></br>
+    <LastDeal id={props.id}  />
+    </div>
   );
 }
 export default MainView;

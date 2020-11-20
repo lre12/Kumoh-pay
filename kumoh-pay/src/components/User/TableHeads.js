@@ -33,6 +33,7 @@ const TableHeads = (props) => {
           ))}
           <TableCell>상세정보</TableCell>
           <TableCell>사용자삭제</TableCell>
+          <TableCell>상품권전송</TableCell>
         </TableRow>
       </TableHead>
     );

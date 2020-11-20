@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
+import UserStore from '../stores/UserStore'
 import {
   Box,
   Button,
@@ -50,7 +51,12 @@ const data = [
 ];
 
 const useStyles = makeStyles(() => ({
-  root: {},
+  root: {
+    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+    "&:hover": {
+      boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
+    },
+  },
   actions: {
     justifyContent: 'flex-end'
   },
@@ -66,14 +72,36 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const LastDeal = ({setHasCookie},{ className, ...rest }) => {
+const LastDeal = ({id}) => {
   const classes = useStyles();
-  const [orders] = useState(data);
+  const [orders,setOrders] = useState([]);
+  const [isReceive, setIsReceive] = useState(false);
+  const userStore = useContext(UserStore.context)
+  useEffect(() => {
+    handleData();
+  },[setOrders]);
 
+
+  const handleData = async () => {
+    try {
+      const getResponse = await userStore.walletGet("getHistory", id);
+      if(await Array.isArray(getResponse.data.result)){
+        await setOrders(getResponse.data.result);
+      } else {
+        await setOrders([]);
+      }
+      await console.log(getResponse.data.result);
+    } catch(e) {
+
+    }
+
+    if(orders !== null) {
+      await setIsReceive(true);
+    }
+  }
   return (
     <Card
-      className={clsx(classes.root, className)}
-      {...rest}
+      className={clsx(classes.root)}
     >
       <CardHeader title="최근 거래 내역" />
       <Divider />
@@ -104,22 +132,29 @@ const LastDeal = ({setHasCookie},{ className, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((order) => (
-                <TableRow
-                  hover
-                  key={order.id}
-                >
-                  <TableCell>
-                    {order.ref}
-                  </TableCell>
-                  <TableCell>
-                    {moment(order.createdAt).format('DD/MM/YYYY')}
-                  </TableCell>
-                  <TableCell>
-                    {order.amount}
-                  </TableCell>
-                </TableRow>
-              ))}
+            { isReceive === true ? (
+          orders.map((order) => (
+            <TableRow
+              hover
+              key={order.id}
+            >
+              <TableCell>
+                {order.ref}
+              </TableCell>
+              <TableCell>
+                {moment(order.createdAt).format('DD/MM/YYYY')}
+              </TableCell>
+              <TableCell>
+                {order.amount}
+              </TableCell>
+            </TableRow>
+          ))) : (
+          <TableRow>
+                <TableCell align="center"></TableCell>
+                <TableCell align="center"></TableCell>
+                <TableCell align="center"></TableCell>
+            </TableRow>
+          )}
             </TableBody>
           </Table>
         </Box>

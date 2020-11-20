@@ -5,9 +5,11 @@ import App from './components/App';
 import { BrowserRouter } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
 import * as serviceWorker from './serviceWorker';
+import GlobalStyles from './GlobalStyles';
 
 ReactDOM.render(
   <BrowserRouter>
+  <GlobalStyles />
     <CookiesProvider>
       <App />
       

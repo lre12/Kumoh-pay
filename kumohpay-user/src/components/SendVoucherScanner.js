@@ -34,13 +34,10 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const SendVoucherScanner = ({ setHasCookie, removeCookie }) =>{
+const SendVoucherScanner = ({ setHasCookie, setPoint }) =>{
     const [result, setResult] = useState('QR코드를 찍어주세요')
     const [isScan, setIsScan] = useState(false)
     const [id, setId] = useState(null);
-    const [name, setName] = useState(null);
-    const [charge, setCharge] = useState(null);
-    const [userGroup, setUserGroup] = useState(null);
     const [sendMoney, setSendMoney] = useState(null);
     const classes = useStyles();
     const userStore = useContext(UserStore.context)
@@ -54,9 +51,6 @@ const SendVoucherScanner = ({ setHasCookie, removeCookie }) =>{
             setHasCookie(false);
           } else {
             setId(response[0].id);
-            setName(response[0].name);
-            setCharge(response[0].charge);
-            setUserGroup(response[0].userGroup);
           }
         } catch (err) {
           console.log(err);
@@ -68,7 +62,7 @@ const SendVoucherScanner = ({ setHasCookie, removeCookie }) =>{
       return () => {
         abortController.abort();
       }
-    }, [id, name, charge, userGroup, setHasCookie]);
+    }, [id, setHasCookie]);
 
     const handleScan = (data) =>{
         if (data) {
@@ -85,7 +79,18 @@ const SendVoucherScanner = ({ setHasCookie, removeCookie }) =>{
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            //전송
+          const dealInfo = [id,result,sendMoney];
+          const response = await userStore.walletPost("changePointOwner",dealInfo);
+          const resultMessage = response.request.response.split(':')
+          const msg = resultMessage[2].split(',')[0];
+          console.log(msg.subString(1,msg.length-1));
+          if(msg.subString(1,msg.length-1) === "Successfully change point owner"){
+            alert("송금 완료!")
+            const getResponse = await userStore.walletGet("queryPoint", id);
+            await setPoint(getResponse.data.result.Amount);
+          }else{
+            alert("재요청 바랍니다.")
+          }
         } catch (err) {
             //에러
         }

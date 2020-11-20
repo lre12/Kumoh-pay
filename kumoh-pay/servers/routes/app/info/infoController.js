@@ -1,5 +1,7 @@
 const connection = require('../../../dbconnection');
 
+
+const crypto = require('crypto');
 exports.getAll = async function(req,res,next){
     id = res.locals.userId;
     var sql = "SELECT * FROM USER WHERE id =" + '"' + id + '"';
@@ -18,16 +20,29 @@ exports.getAll = async function(req,res,next){
 exports.update = async function(req,res,next){
     id = res.locals.userId;
     pwd = req.body.pwd;
-    var sql = "UPDATE USER SET password ="+'"'+pwd+'"'+" WHERE id =" + '"' + id + '"';
-    try{
-        await connection.query(sql,
-            (err, rows, fields) => {
-                res.send({
-                    result : 'ok'
-                });
-            }
-        )
-    }catch(err){
-        next(err)
-    }
+    var DBuserExist = "SELECT EXISTS (SELECT * FROM USER WHERE id =" + '"' + id + '"' + ") AS SUCCESS";
+    var DBuserCheck = "SELECT * FROM USER WHERE id =" + '"' + id + '"';
+    connection.query(DBuserExist, function (err, data) {
+        if (data[0].SUCCESS == 1) {
+            connection.query(DBuserCheck, function (err, data) {
+                const hashPwd = crypto.createHash("sha512").update(pwd + data[0].salt).digest("hex");
+                var sql = "UPDATE USER SET password ="+'"'+hashPwd+'"'+" WHERE id =" + '"' + id + '"';
+                try{
+                    connection.query(sql,
+                        (err, rows, fields) => {
+                            res.send({
+                                result : 'ok'
+                            });
+                        }
+                    )
+                }catch(err){
+                    next(err)
+                }
+            })
+        }else {
+            res.send({
+                result: 'fail'
+            })
+        }
+    })
 }

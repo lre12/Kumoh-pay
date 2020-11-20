@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UpdateInfoView = ({ setHasCookie, removeCookie }) => {
+const UpdateInfoView = ({ setHasCookie, point }) => {
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [charge, setCharge] = useState(null);
@@ -53,7 +53,7 @@ const UpdateInfoView = ({ setHasCookie, removeCookie }) => {
         } else {
           setId(response[0].id);
           setName(response[0].name);
-          setCharge(response[0].charge);
+          setCharge(point);
           setUserGroup(response[0].userGroup);
         }
       } catch (err) {
@@ -89,12 +89,16 @@ const UpdateInfoView = ({ setHasCookie, removeCookie }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if(values.password===""){
+        alert('비밀번호를 입력해주세요')
+      }else{
         const response = await userStore.changeInfoApi(id,values.password);
         console.log(response);
         console.log('zz');
         if (response.data.result === 'ok') {
             alert('수정 성공!')
         }
+      }
     } catch (err) {
         console.error('login error', err);
         alert('회원정보수정에 실패하였습니다. 잠시 후 다시 시도해주세요.')

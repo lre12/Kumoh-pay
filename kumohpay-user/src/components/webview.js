@@ -25,13 +25,12 @@ import UpdateInfoView from './UpdateInfoView';
 import GetVoucherView from './GetVoucherView';
 import SendVoucherScanner from './SendVoucherScanner';
 import UserStore from '../stores/UserStore';
-import LastDeal from './LastDeal';
 
-const WebView = ({ setHasCookie,point, removeCookie }, props) => {
+
+const WebView = ({ setHasCookie,point, removeCookie, setPoint }, props) => {
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [userGroup, setUserGroup] = useState(null);
-  const [openDialog, isOpenDialog] = useState(false);
   const userStore = useContext(UserStore.context)
 
   const logout = () => {
@@ -55,6 +54,8 @@ const WebView = ({ setHasCookie,point, removeCookie }, props) => {
           // const charge = await userStore.walletGet("getHistory", id);
           // setCharge(charge.result.amount);
           // console.log(charge)
+          const getResponse = await userStore.walletGet("queryPoint", id);
+          await setPoint(getResponse.data.result.Amount)
         }
       } catch (err) {
         console.log(err);
@@ -66,17 +67,11 @@ const WebView = ({ setHasCookie,point, removeCookie }, props) => {
     return () => {
       abortController.abort();
     }
-  }, [id, name, userGroup, setHasCookie]);
+  }, [id, name, userGroup, setHasCookie, setPoint]);
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [NotificationCnt, setCnt] = useState(0);
-  const switchDialog = () => {
-    if (openDialog) {
-      isOpenDialog(false)
-    } else {
-      isOpenDialog(true)
-    }
-  }
+  
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -113,11 +108,6 @@ const WebView = ({ setHasCookie,point, removeCookie }, props) => {
                   금오페이
               </Link>
               </Typography>
-              <IconButton color="inherit">
-                <Badge badgeContent={NotificationCnt} color="secondary">
-                  <NotificationsIcon onClick={switchDialog} />
-                </Badge>
-              </IconButton>
               <IconButton color="inherit" onClick={logout}>
                 <Badge color="secondary">
                   <ExitToAppIcon />
@@ -145,35 +135,18 @@ const WebView = ({ setHasCookie,point, removeCookie }, props) => {
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container}>
-              {
-                openDialog &&
-                <Card className={classes.root}>
-                  <CardContent>
-                    {NotificationCnt===0&&<Typography className={classes.title} color="textSecondary" gutterBottom>
-                      현재 알림이 없습니다.
-                    </Typography>}
-                    {NotificationCnt!=0&&<Typography className={classes.title} color="textSecondary" gutterBottom>
-                      현재 알림이 {NotificationCnt} 개 있습니다.
-                    </Typography>}
-                    
-                  </CardContent>
-                </Card>
-              }
               <Switch>
                 <Route path="/WebView">
                   <MainView id={id} name={name} charge={point} userGroup={userGroup} />
                 </Route>
                 <Route path="/update">
-                  <UpdateInfoView setHasCookie={setHasCookie} />
+                  <UpdateInfoView setHasCookie={setHasCookie} point = {point}/>
                 </Route>
                 <Route path="/getVoucher">
                   <GetVoucherView setHasCookie={setHasCookie} />
                 </Route>
                 <Route path="/sendVoucher">
-                  <SendVoucherScanner setHasCookie={setHasCookie} />
-                </Route>
-                <Route path="/lastDeal">
-                  <LastDeal setHasCookie={setHasCookie} />
+                  <SendVoucherScanner setHasCookie={setHasCookie} setPoint = {setPoint} />
                 </Route>
               </Switch>
             </Container>

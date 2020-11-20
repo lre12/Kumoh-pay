@@ -60,7 +60,7 @@ class UserStore{
   }
 
   @action
-  createUserApi = async (userId,userPw,userName,authNumber)=> {
+  createUserApi = async (userId,userPw,userName,authNumber,isStudent)=> {
     const url = '/app/auth/new';
     let res;
    await post(url,{
@@ -68,6 +68,7 @@ class UserStore{
       pwd : userPw,
       name : userName,
       ranNum : authNumber,
+      type : isStudent,
     }).then(function (response) {
       res = response;
       console.log(response);
@@ -119,7 +120,7 @@ class UserStore{
 
   @action
   walletPost = async (fcn, args) => {
-    const url = '/wallet/channels/:mychannel/chaincodes/:kit_pay'
+    const url = '/wallet/channels/mychannel/chaincodes/kit_pay'
     let res;
     await post(url,{
       peers : ["peer0.org1.example.com", "peer0.org2.example.com"],
@@ -128,7 +129,7 @@ class UserStore{
       transient : 'transient',
     }).then(function (response) {
       res = response;
-      console.log(response.data.token);
+      console.log(res);
     })
     return res;
   }

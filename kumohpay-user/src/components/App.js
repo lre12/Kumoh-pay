@@ -78,6 +78,7 @@ const App = () => {
                                     removeCookie('user');
                                     setHasCookie(false);
                                 }}
+                                setPoint = {setPoint}
                             />
                         );
                     }}

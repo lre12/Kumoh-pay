@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -8,9 +8,9 @@ import VoucherDelete from "./VoucherDelete"
 import VoucherAdd from "./VoucherAdd"
 
 import Grid from '@material-ui/core/Grid';
-import CloseIcon from '@material-ui/icons/Close';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import IconButton from '@material-ui/core/IconButton';
+import {walletGet} from '../Wallet';
 
 const useStyles = makeStyles({
   card: {
@@ -35,22 +35,25 @@ const useStyles = makeStyles({
   },
 });
 
-const Voucher = ( { myVoucher } ) => {
+const Voucher = ( { point, setPoint, userId } ) => {
   const classes = useStyles();
-  const [voucher, setVoucher] = useState(myVoucher);
+
+  useEffect (() => {
+
+  }, [setPoint])
+
+  const stateRefresh = async () => {
+    const getResponse = await walletGet("queryPoint", userId);
+    console.log(getResponse);
+    await setPoint(getResponse.data.result.Amount);
+  };
 
   return (
     <Card className={classes.card}>
       <CardContent>
       <Grid container spacing={3}>
       <Grid item xs={2}>
-      <IconButton
-        color="inherit"
-        aria-label="close card"
-        size="small"
-        >
-          <RefreshIcon className={classes.icon} style={{ fontSize: 15 }} />
-        </IconButton>
+
       </Grid>
         <Grid item xs={8}>
         <Typography className={classes.title} gutterBottom>
@@ -63,18 +66,19 @@ const Voucher = ( { myVoucher } ) => {
         color="inherit"
         aria-label="close card"
         size="small"
+        onClick={stateRefresh}
         >
-          <CloseIcon className={classes.icon} style={{ fontSize: 15 }}/>
+          <RefreshIcon className={classes.icon} style={{ fontSize: 15 }} />
         </IconButton>
         </Grid>
         </Grid>
         <Typography className={classes.charge} variant="h5" component="h2">
-          {myVoucher}원
+          {point}원
         </Typography>
       </CardContent>
       <CardActions className={classes.button}>
-          <VoucherAdd voucher={voucher} setVoucher={setVoucher}/>
-          <VoucherDelete voucher={voucher} setVoucher={setVoucher}/>
+          <VoucherAdd userId={userId} setPoint={setPoint}/>
+          <VoucherDelete userId={userId} setPoint={setPoint}/>
       </CardActions>
     </Card>
   );

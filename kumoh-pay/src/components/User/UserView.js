@@ -23,6 +23,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import UserDelete from './UserDelete';
 import TableHeads from './TableHeads';
 import UserDetail from './UserDetail';
+import VoucherSend from '../Voucher/VoucherSend';
+import { handleDataAll, handleData } from './UserData'
+import { walletGet } from '../Wallet';
+
 
 
 
@@ -106,6 +110,12 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       minWidth: 100
     },
+    button: {
+      textAlign: 'right',
+      '& > *': {
+        margin: theme.spacing(1),
+      },
+    },
 }));
 
 function descendingComparator(a, b, orderBy) {
@@ -143,18 +153,29 @@ const headCells = [
     { id: "recentUseDate", label: "최근이용" },
   ];
 
-export default function UserView({ setHasCookie}) {
+export default function UserView({ userId, setPoint, setHasCookie }) {
   const classes = useStyles();
   const [data, setData] = useState([]);
+  const [voucher, setVoucher] = useState([]);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("id");
   const [page, setPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchKey, setSearchKey] = useState('id');
   const [userGroups, setUserGroups] = useState("판매자");
-  const [open, setOpen] = useState(false);
   const [pageSize, setPageSize] = useState(25); // 페이지 당 갯수
   const [count, setCount] = useState(1); //총 페이지 수
+  const [myIndex, setMyIndex] = useState(0);
+
+  useEffect (() => {
+    handleVoucher();
+  }, [])
+
+  useEffect(() => {
+    parseInt(data.length, 10) > 0 ?
+      setCount(Math.ceil((data.length + 1) / pageSize)) :
+      setCount(1)
+  }, [data, pageSize]);
 
   const handlePageSize = (event) => {
     setPageSize(event.target.value);
@@ -164,76 +185,35 @@ export default function UserView({ setHasCookie}) {
     setPage(value);
   };
 
-  const handleChangeData = async () => { searchKeyword === "" ? handleDataAll(): handleData() };
+  const handleChangeData = async () => {
+      await searchKeyword === "" ?
+      handleDataAll(userGroups, setData) :
+      handleData(userGroups, setData, searchKey, searchKeyword);
 
-  useEffect(() => {
-    parseInt(data.length, 10) > 0 ?
-      setCount(Math.ceil((data.length + 1) / pageSize)) :
-      setCount(1)
-  }, [data, pageSize]);
-
-  const handleDataAll = async () => {
-    await fetch("/api/users")
-    .then((response) => response.json())
-    .then((data) => 
-        setData(data)
-    )
-    .catch(err => console.log(err));
   };
 
-  const handleData = () => {
-    if(userGroups === "전체"){
-      handleAllSearch()
-    }else if(userGroups === "판매자"){
-      handleSellerSearch()
-    }else{
-      handleUserSearch()
-    };
-    setOpen(false)
-    console.log(count + " " + page);
+  const handleVoucher = async () => {
+
+    try {
+      const getResponse = await walletGet("queryAllPoint", userId);
+      if(await Array.isArray(getResponse.data.result)){
+        await setVoucher(getResponse.data.result);
+      } else {
+        await setVoucher([]);
+      }
+      await console.log(voucher);
+    } catch(e) {
+
+    }
   };
 
-  const handleAllSearch = async () => {
-    searchKey === "id" ?
-      await fetch("/api/users/all/id/" + searchKeyword)
-      .then((response) => response.json())
-      .then((data) => {
-      setData(data)
-      }) :
-      await fetch("/api/users/all/name/" + searchKeyword)
-      .then((response) => response.json())
-      .then((data) => 
-      setData(data)
-      )
-  }
-
-  const handleSellerSearch = async () => {
-    searchKey === "id" ?
-      await fetch("/api/users/seller/id/" + searchKeyword)
-      .then((response) => response.json())
-      .then((data) => 
-      setData(data)
-      ) :
-      await fetch("/api/users/seller/name/" + searchKeyword)
-      .then((response) => response.json())
-      .then((data) => 
-      setData(data)
-      )
-  }
-
-  const handleUserSearch = async () => {
-    searchKey === "id" ?
-      await fetch("/api/users/user/id/" + searchKeyword)
-      .then((response) => response.json())
-      .then((data) => 
-      setData(data)
-      ) :
-      await fetch("/api/users/user/name/" + searchKeyword)
-      .then((response) => response.json())
-      .then((data) => 
-      setData(data)
-      )
-    
+  const isVoucher = (id) => {
+    for(var i = 0; i < voucher.length; i++) {
+      if (voucher[i].Owner == id) {
+        setMyIndex(i);
+        return true;
+      }
+    }
   }
 
   const handleRequestSort = (event, property) => {
@@ -258,7 +238,7 @@ export default function UserView({ setHasCookie}) {
     <div className={classes.root}>
         <div className={classes.menu}>
         <Grid>
-        <Grid item xs={12} 
+        <Grid item xs={12}
             align="center">
           <Typography
             className={classes.title}
@@ -269,7 +249,7 @@ export default function UserView({ setHasCookie}) {
             사용자 관리
           </Typography>
         </Grid>
-        <Grid item xs={12} 
+        <Grid item xs={12}
             align="center">
           <FormControl component="searchForm">
             <RadioGroup
@@ -302,7 +282,7 @@ export default function UserView({ setHasCookie}) {
             <MenuItem value={"학생"}>학생</MenuItem>
           </Select>
         </Grid>
-        <Grid item xs={12} 
+        <Grid item xs={12}
             align="center">
         <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -324,12 +304,15 @@ export default function UserView({ setHasCookie}) {
             </Button>
         </div>
           </Grid>
-            <Collapse in={open} timeout="0" alignItems="center">
-              키워드를 입력해주세요.
-            </Collapse>
+
           </Grid>
         </div>
       <Paper className={classes.paper}>
+        <div className={classes.button}>
+        <Button variant="contained" color="primary" onClick={() => handleVoucher()}>
+          상품권 조회
+        </Button>
+        </div>
         <TableContainer>
           <Table
             className={classes.table}
@@ -353,17 +336,18 @@ export default function UserView({ setHasCookie}) {
                       <TableCell align="center">{user.name}</TableCell>
                       <TableCell align="center">{user.userGroup}</TableCell>
                       <TableCell align="center">{user.permit}</TableCell>
-                      <TableCell align="center">{user.charge}</TableCell>
+                      <TableCell align="center">{isVoucher(user.id) ? voucher[myIndex].Amount : 0}</TableCell>
                       <TableCell align="center">{user.recentUseDate}</TableCell>
-                      <TableCell><UserDetail setHasCookie = {setHasCookie} handleChangeData={handleChangeData} id={user.id} name={user.name} userGroup={user.userGroup} permit={user.permit} charge={user.charge}/></TableCell>
+                      <TableCell><UserDetail setHasCookie = {setHasCookie} handleChangeData={handleChangeData} userId={userId} id={user.id} name={user.name} userGroup={user.userGroup} permit={user.permit} charge={user.charge}/></TableCell>
                       <TableCell><UserDelete setHasCookie = {setHasCookie} handleChangeData={handleChangeData} id={user.id} name={user.name} charge={user.charge}/></TableCell>
+                      <TableCell><VoucherSend setHasCookie = {setHasCookie} setPoint={setPoint} userId={userId} receiverId={user.id}/></TableCell>
                     </TableRow>
                   );
                 })}
             </TableBody>
           </Table>
         </TableContainer>
-        <div className={classes.pagination}> 
+        <div className={classes.pagination}>
             <Pagination
               count={count}
               page={page}
@@ -384,7 +368,7 @@ export default function UserView({ setHasCookie}) {
             <MenuItem value={100}>100</MenuItem>
           </Select>
         </div>
-       
+
         {/* <TablePagination
           rowsPerPageOptions={[25, 50, 100]}
           component="div"

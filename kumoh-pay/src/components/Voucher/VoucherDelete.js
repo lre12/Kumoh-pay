@@ -5,17 +5,23 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
+import {walletPost, walletGet} from '../Wallet';
 
-const VoucherDelete = (props) => {
+const VoucherDelete = ({ userId, setPoint}) => {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState('');
 
-    const deleteVoucher = () => {
-        parseInt(props.voucher, 10) - parseInt(value, 10) < 0 ?
-            props.setVoucher(parseInt(0, 10)):
-            props.setVoucher(parseInt(props.voucher - value, 10))
-        setValue('');
-        setOpen(false)
+    const delVouchers = async () => {
+        if (value < 100 || value % 100 != 0) {
+            alert("100 단위 입력");
+        } else {
+            const delInfo = [userId, value];
+            const response = await walletPost("deletePoint", delInfo);
+            const getResponse = await walletGet("queryPoint", userId);
+            console.log(getResponse);
+            await setPoint(getResponse.data.result.Amount);
+            await setOpen(false);
+        }
     };
 
     const handleValue = (event) => {
@@ -42,7 +48,7 @@ const VoucherDelete = (props) => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" color="primary" onClick={() => {deleteVoucher()}}>확인</Button>
+                    <Button variant="contained" color="primary" onClick={() => {delVouchers()}}>확인</Button>
                     <Button variant="outlined" color="primary" onClick={() => setOpen(false)}>취소</Button>
                 </DialogActions>
             </Dialog>

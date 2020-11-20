@@ -7,10 +7,10 @@ const { verifyToken } = require('./app/auth/middlewares/authorization');
 router.post('/login',controller.createToken)
 
 router.get('/users/all/id/:id',verifyToken ,(req, res) => {
-    let sql = "SELECT id, name, userGroup, permit, charge, recentUseDate FROM USER WHERE id LIKE '%"
-                + req.params.id 
-                +"%' AND isDeleted=0" 
-    connection.query(sql, 
+    let sql = "SELECT id, name, userGroup, permit, recentUseDate FROM USER WHERE id LIKE '%"
+                + req.params.id
+                +"%' AND isDeleted=0"
+    connection.query(sql,
         (err, rows, fields) => {
             console.log(sql)
             res.send(rows)
@@ -19,10 +19,10 @@ router.get('/users/all/id/:id',verifyToken ,(req, res) => {
 });
 
 router.get('/users/all/name/:id',verifyToken, (req, res) => {
-    let sql = "SELECT id, name, userGroup, permit, charge, recentUseDate FROM USER WHERE name LIKE '%"
-                + req.params.id 
+    let sql = "SELECT id, name, userGroup, permit, recentUseDate FROM USER WHERE name LIKE '%"
+                + req.params.id
                 +"%' AND isDeleted=0"
-    connection.query(sql, 
+    connection.query(sql,
         (err, rows, fields) => {
             console.log(sql)
             res.send(rows)
@@ -31,10 +31,10 @@ router.get('/users/all/name/:id',verifyToken, (req, res) => {
 });
 
 router.get('/users/seller/id/:id',verifyToken, (req, res) => {
-    let sql = "SELECT id, name, userGroup, permit, charge, recentUseDate FROM USER WHERE id LIKE '%"
-                + req.params.id 
-                +"%' AND isDeleted=0 AND userGroup='판매자'" 
-    connection.query(sql, 
+    let sql = "SELECT id, name, userGroup, permit, recentUseDate FROM USER WHERE id LIKE '%"
+                + req.params.id
+                +"%' AND isDeleted=0 AND userGroup='판매자'"
+    connection.query(sql,
         (err, rows, fields) => {
             console.log(sql)
             res.send(rows)
@@ -43,10 +43,10 @@ router.get('/users/seller/id/:id',verifyToken, (req, res) => {
 });
 
 router.get('/users/seller/name/:id',verifyToken, (req, res) => {
-    let sql = "SELECT id, name, userGroup, permit, charge, recentUseDate FROM USER WHERE name LIKE '%"
-                + req.params.id 
+    let sql = "SELECT id, name, userGroup, permit, recentUseDate FROM USER WHERE name LIKE '%"
+                + req.params.id
                 +"%' AND isDeleted=0 AND userGroup='판매자'"
-    connection.query(sql, 
+    connection.query(sql,
         (err, rows, fields) => {
             console.log(sql)
             res.send(rows)
@@ -55,10 +55,10 @@ router.get('/users/seller/name/:id',verifyToken, (req, res) => {
 });
 
 router.get('/users/user/id/:id',verifyToken, (req, res) => {
-    let sql = "SELECT id, name, userGroup, permit, charge, recentUseDate FROM USER WHERE id LIKE '%"
-                + req.params.id 
-                +"%' AND isDeleted=0 AND userGroup='학생'" 
-    connection.query(sql, 
+    let sql = "SELECT id, name, userGroup, permit, recentUseDate FROM USER WHERE id LIKE '%"
+                + req.params.id
+                +"%' AND isDeleted=0 AND userGroup='학생'"
+    connection.query(sql,
         (err, rows, fields) => {
             console.log(sql)
             res.send(rows)
@@ -67,10 +67,10 @@ router.get('/users/user/id/:id',verifyToken, (req, res) => {
 });
 
 router.get('/users/user/name/:id',verifyToken, (req, res) => {
-    let sql = "SELECT id, name, userGroup, permit, charge, recentUseDate FROM USER WHERE name LIKE '%"
-                + req.params.id 
+    let sql = "SELECT id, name, userGroup, permit, recentUseDate FROM USER WHERE name LIKE '%"
+                + req.params.id
                 +"%' AND isDeleted=0 AND userGroup='학생'"
-    connection.query(sql, 
+    connection.query(sql,
         (err, rows, fields) => {
             console.log(sql)
             res.send(rows)
@@ -78,9 +78,27 @@ router.get('/users/user/name/:id',verifyToken, (req, res) => {
     )
 });
 
-router.get('/users', verifyToken,(req, res) => {
+router.get('/users/all', verifyToken,(req, res) => {
     connection.query(
-        'SELECT id, name, userGroup, permit, charge, recentUseDate FROM USER WHERE isDeleted = 0',
+        'SELECT id, name, userGroup, permit, recentUseDate FROM USER WHERE isDeleted = 0',
+        (err, rows, fields) => {
+            res.send(rows);
+        }
+    )
+});
+
+router.get('/users/seller', verifyToken,(req, res) => {
+    connection.query(
+        "SELECT id, name, userGroup, permit, recentUseDate FROM USER WHERE isDeleted = 0 AND userGroup='판매자'",
+        (err, rows, fields) => {
+            res.send(rows);
+        }
+    )
+});
+
+router.get('/users/user', verifyToken,(req, res) => {
+    connection.query(
+        "SELECT id, name, userGroup, permit, recentUseDate FROM USER WHERE isDeleted = 0 AND userGroup='학생'",
         (err, rows, fields) => {
             res.send(rows);
         }
