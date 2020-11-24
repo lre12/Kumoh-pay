@@ -25,8 +25,9 @@ import { menuListItems } from './listItems';
 import UserView from './User/UserView';
 import CalculateView from './Calculate/CalculateView';
 import Voucher from './Voucher/Voucher';
+import UserDetail from './User/UserDetail';
+import PresentView from './Present/PresentView'
 
-import PresentView from './Present/PresentView';
 import { walletGet, walletPost } from './Wallet';
 
 const drawerWidth = 240;
@@ -130,11 +131,13 @@ function Layout({ setHasCookie, userId, point, setPoint, removeCookie }) {
               >
                   <MenuIcon />
               </IconButton>
+
               <Typography variant="h6" className={classes.titleApp}>
                   <Link to="/home" style={{textDecoration: 'none', color: 'white'}}>
                     금오페이 관리 시스템
                   </Link>
               </Typography>
+              <UserDetail setHasCookie = {setHasCookie} userId={userId} id={userId} name="Admin" userGroup="Admin" permit="Admin" btnInfo="관리자 거래내역" />
               <Button onClick={logout} focus="right" color="inherit" href="/login">
                   로그아웃
               </Button>
@@ -167,7 +170,7 @@ function Layout({ setHasCookie, userId, point, setPoint, removeCookie }) {
           <Switch>
             <Route path="/user"><UserView setHasCookie={setHasCookie} userId={id} setPoint={setPoint} /></Route>
             <Route path="/present"><PresentView userId={id} setHasCookie={setHasCookie}/></Route>
-            <Route path="/settlement"><CalculateView setHasCookie={setHasCookie} /></Route>
+            <Route path="/settlement"><CalculateView userId={id} setHasCookie={setHasCookie} /></Route>
           </Switch>
         </main>
       </div>

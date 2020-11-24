@@ -69,7 +69,13 @@ exports.createToken = function (req, res, next) {
                             res.send({
                                 result: 'NoPermit'
                             })
-                        }else{
+                        }else if(data[0].isDeleted === 1){
+                            res.send({
+                                result: 'fail'
+                            })
+                        }
+                        
+                        else{
                             let hashPassword = crypto.createHash("sha512").update(inputpwd + data[0].salt).digest("hex");
                             console.log(hashPassword);
                             console.log(data[0].password);

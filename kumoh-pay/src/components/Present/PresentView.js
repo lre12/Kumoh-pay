@@ -40,47 +40,56 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PresentView({ userId, setHasCookie}) {
   const classes = useStyles();
-  const [isReceive, setIsReceive] = useState(false);
+  const [dataAll, setDataAll] = useState([]);
   const [data, setData] = useState([]);
   const [firstDate, setFirstDate] = useState(null);
   const [secondDate, setSecondDate] = useState(null);
+  const [search, setSearch] = useState(null);
   let count = 0;
 
   useEffect (() => {
     handleData();
+    console.log(data);
+    return (console.log(data));
   }, [])
 
-  useEffect (() => {
-  }, [setData])
 
   const handleData = async () => {
     try {
       const getResponse = await walletGet("getAllHistory", userId);
       if(await Array.isArray(getResponse.data.result)){
+        await setDataAll(getResponse.data.result);
         await setData(getResponse.data.result);
       } else {
-        await setData([]);
+        await setDataAll([]);
       }
       await console.log(data);
     } catch(e) {
 
     }
 
-    if(data !== null) {
-      await setIsReceive(true);
+  }
+
+  const handleSearchUser = () => {
+
+    if (search==null) {
+      setData(dataAll);
+    } else {
+      setData(dataAll.filter(datas => datas.sender === search));
     }
   }
 
   const handleSearchData = async () => {
-    handleData();
     if (firstDate===null || secondDate==null) {
       alert("날짜를 입력하세요.");
     } else {
-      await setData(data.filter(dt => dt.date > firstDate && dt.date < secondDate));
+      await handleSearchUser();
+      await setData(data.filter(datas => firstDate <= datas.date && datas.date <= secondDate));
     }
-    await console.log(firstDate);
-    await console.log(secondDate);
-    await console.log(data);
+  }
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value)
   }
 
   const handleFirstChange = (event) => {
@@ -100,14 +109,17 @@ export default function PresentView({ userId, setHasCookie}) {
                 color="inherit"
                 noWrap
             >
-            수여내역 조회
+            거래 내역 조회
             </Typography>
         </div>
         <div className={classes.button}>
             <TextField id="firstDate" type="date" value={firstDate} onChange={handleFirstChange} />
             <TextField id="secondDate" type="date" value={secondDate} onChange={handleSecondChange} />
             <Button variant="contained" color="primary" onClick={() => {handleSearchData()}}>검색</Button>
-            <Button variant="contained" color="primary" onClick={() => {handleData()}}>전체 조회</Button>
+            <Button variant="contained" color="primary" onClick={() => {handleData()}}>조회 갱신</Button>
+        </div>
+        <div className={classes.button}>
+          <TextField id="searchUser" label="보낸사람 검색" value={search} onChange={handleSearch} />&nbsp;
         </div>
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
@@ -121,24 +133,15 @@ export default function PresentView({ userId, setHasCookie}) {
           </TableRow>
         </TableHead>
         <TableBody>
-          { isReceive === true ? (
-          data.map((dt) => (
-            <TableRow key={dt.receiver}>
+          { data.map((datas) => (
+            <TableRow>
                 <TableCell align="center">{count=count+1}</TableCell>
-                <TableCell align="center">{dt.sender}</TableCell>
-                <TableCell align="center">{dt.receiver}</TableCell>
-                <TableCell align="center">{dt.amount}원</TableCell>
-                <TableCell align="center">{dt.date}</TableCell>
+                <TableCell align="center">{datas.sender}</TableCell>
+                <TableCell align="center">{datas.receiver}</TableCell>
+                <TableCell align="center">{datas.amount}원</TableCell>
+                <TableCell align="center">{datas.date}</TableCell>
             </TableRow>
-          ))) : (
-          <TableRow>
-                <TableCell align="center"></TableCell>
-                <TableCell align="center"></TableCell>
-                <TableCell align="center"></TableCell>
-                <TableCell align="center"></TableCell>
-                <TableCell align="center"></TableCell>
-            </TableRow>
-          )}
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

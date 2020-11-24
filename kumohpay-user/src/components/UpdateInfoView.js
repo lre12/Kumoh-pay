@@ -86,6 +86,11 @@ const UpdateInfoView = ({ setHasCookie, point }) => {
     event.preventDefault();
   };
 
+  const deleteUser = async () => {
+    userStore.deleteUser(id);
+    setHasCookie(false);
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -164,6 +169,7 @@ const UpdateInfoView = ({ setHasCookie, point }) => {
       <CardActionArea>
         <CardActions style={{ justifyContent: 'center' }}>
           <Button type="submit" className={classes.button}>수정</Button>
+          <Button onClick={deleteUser} className={classes.button}>삭제</Button>
         </CardActions>
       </CardActionArea>
     </Card>

@@ -105,6 +105,15 @@ router.get('/users/user', verifyToken,(req, res) => {
     )
 });
 
+router.get('/users/calc', verifyToken,(req, res) => {
+    connection.query(
+        "SELECT id, name FROM USER WHERE isDeleted = 0 AND userGroup='판매자'",
+        (err, rows, fields) => {
+            res.send(rows);
+        }
+    )
+});
+
 router.post('/permit',verifyToken, (req, res) => {
     let sql = 'UPDATE USER SET permit=? WHERE id=?'
     let permit = req.body.permit
@@ -135,14 +144,18 @@ router.post('/users',verifyToken, (req, res) => {
     )
 })
 
-router.delete('/users/:id',verifyToken, (req, res) => {
+router.post('/users/delete',verifyToken, (req, res) => {
     let sql = 'UPDATE USER SET isDeleted = 1 WHERE id = ?';
-    let params = [req.params.id];
+    let params = req.body.id;
+    console.log("delete");
     connection.query(sql, params,
         (err, rows, fields) => {
             res.send(rows);
+            console.log(rows);
         }
     )
 });
+
+
 
 module.exports = router;

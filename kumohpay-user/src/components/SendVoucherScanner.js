@@ -84,7 +84,7 @@ const SendVoucherScanner = ({ setHasCookie, setPoint }) =>{
           const resultMessage = response.request.response.split(':')
           const msg = resultMessage[2].split(',')[0];
           console.log(msg.subString(1,msg.length-1));
-          if(msg.subString(1,msg.length-1) === "Successfully change point owner"){
+          if(msg.subString(1,msg.length-1) == "Successfully change point owner"){
             alert("송금 완료!")
             const getResponse = await userStore.walletGet("queryPoint", id);
             await setPoint(getResponse.data.result.Amount);

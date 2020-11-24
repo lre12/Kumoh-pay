@@ -5,6 +5,9 @@ import { v4 as uuid } from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
 import UserStore from '../stores/UserStore'
+import RefreshIcon from '@material-ui/icons/Refresh';
+import IconButton from '@material-ui/core/IconButton';
+import Grid from '@material-ui/core/Grid'
 import {
   Box,
   Button,
@@ -19,36 +22,11 @@ import {
   TableRow,
   TableSortLabel,
   Tooltip,
+  Typography,
   makeStyles
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
-const data = [
-  {
-    id: uuid(),
-    ref: '북카페',
-    amount: 30000,
-    createdAt: 1555016400000
-  },
-  {
-    id: uuid(),
-    ref: '도서관',
-    amount: 2500,
-    createdAt: 1555016400000
-  },
-  {
-    id: uuid(),
-    ref: '학식당',
-    amount: 6000,
-    createdAt: 1554930000000
-  },
-  {
-    id: uuid(),
-    ref: '생협',
-    amount: 960,
-    createdAt: 1554757200000
-  }
-];
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -69,50 +47,60 @@ const useStyles = makeStyles(() => ({
       fontSize: '1.5rem',
       minWidth : 250
     },
+  },
+  dealInfo: {
+
+  },
+  dealAmount: {
+
   }
 }));
 
-const LastDeal = ({id}) => {
+
+const LastDeal = ({id , orders,setOrders}) => {
   const classes = useStyles();
-  const [orders,setOrders] = useState([]);
-  const [isReceive, setIsReceive] = useState(false);
   const userStore = useContext(UserStore.context)
-  useEffect(() => {
-    handleData();
-  },[setOrders]);
 
-
-  const handleData = async () => {
-    try {
-      const getResponse = await userStore.walletGet("getHistory", id);
-      if(await Array.isArray(getResponse.data.result)){
-        await setOrders(getResponse.data.result);
-      } else {
-        await setOrders([]);
-      }
-      await console.log(getResponse.data.result);
-    } catch(e) {
-
+  const stateRefresh = async () => {
+    const history = await userStore.walletGet("getHistory", id);
+    console.log(history);
+    if(Array.isArray(history.data.result)){
+      await setOrders(history.data.result);
+      console.log(history.data.result)
+    } else {
+      await setOrders([]);
     }
+  };
 
-    if(orders !== null) {
-      await setIsReceive(true);
-    }
-  }
   return (
     <Card
       className={clsx(classes.root)}
     >
-      <CardHeader title="최근 거래 내역" />
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+      >
+        <CardHeader title="최근 거래 내역" />
+        <Grid contianer direction="row" justify="flex-end" alignItems="center">
+        <IconButton
+        color="inherit"
+        aria-label="close card"
+        size="small"
+        onClick={stateRefresh}
+        >
+          <RefreshIcon className={classes.icon}  color="textSecondary" />
+        </IconButton>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        </Grid>
+      </Grid>
       <Divider />
       <PerfectScrollbar>
         <Box className={classes.box}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
-                  사용처
-                </TableCell>
                 <TableCell sortDirection="desc">
                   <Tooltip
                     enterDelay={300}
@@ -122,39 +110,62 @@ const LastDeal = ({id}) => {
                       active
                       direction="desc"
                     >
-                      Date
+                      ID
                     </TableSortLabel>
                   </Tooltip>
                 </TableCell>
-                <TableCell>
+                <TableCell align="right">
                   금액
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-            { isReceive === true ? (
-          orders.map((order) => (
-            <TableRow
-              hover
-              key={order.id}
-            >
+            { orders.map((order) => {
+              return (
+              order.receiver === id ?
+                <TableRow hover>
               <TableCell>
-                {order.ref}
+                <Typography variant="caption" display="block" color="textSecondary" gutterBottom>
+                {moment(order.date).format('DD/MM/YYYY')}
+                </Typography>
+                <Divider />
+                <Typography variant="h6" gutterBottom>
+                {order.sender}
+                </Typography>
               </TableCell>
-              <TableCell>
-                {moment(order.createdAt).format('DD/MM/YYYY')}
-              </TableCell>
-              <TableCell>
-                {order.amount}
+              <TableCell align="right">
+                <Typography variant="caption" display="block" color="primary" gutterBottom>
+                입금
+                </Typography>
+                <Divider />
+                <Typography variant="h6" color="error" gutterBottom>
+                {order.amount} 원
+                </Typography>
               </TableCell>
             </TableRow>
-          ))) : (
-          <TableRow>
-                <TableCell align="center"></TableCell>
-                <TableCell align="center"></TableCell>
-                <TableCell align="center"></TableCell>
-            </TableRow>
-          )}
+              :
+                <TableRow hover>
+              <TableCell>
+                <Typography variant="caption" display="block" color="textSecondary" gutterBottom>
+                {moment(order.date).format('DD/MM/YYYY')}
+                </Typography>
+                <Divider />
+                <Typography variant="h6" gutterBottom>
+                {order.receiver}
+                </Typography>
+              </TableCell>
+              <TableCell align="right">
+                <Typography variant="caption" display="block" color="error" gutterBottom>
+                출금
+                </Typography>
+                <Divider />
+                <Typography variant="h6" color="primary" gutterBottom>
+                {order.amount} 원
+                </Typography>
+              </TableCell>
+              </TableRow>
+              )
+              })}
             </TableBody>
           </Table>
         </Box>

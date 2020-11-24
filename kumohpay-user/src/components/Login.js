@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Login = observer(({ setHasCookie, setPoint}) => {
+const Login = observer(({ setHasCookie, setPoint,setOrders}) => {
   const [userId, setUserId] = useState('');
   const [userPw, setUserPw] = useState('');
 
@@ -60,6 +60,13 @@ const Login = observer(({ setHasCookie, setPoint}) => {
         const getResponse = await userStore.walletGet("queryPoint", userId);
         await console.log(getResponse.data.result.Amount);
         await setPoint(getResponse.data.result.Amount)
+        const history = await userStore.walletGet("getHistory", userId);
+        if(Array.isArray(history.data.result)){
+          await setOrders(history.data.result);
+          console.log(history.data.result)
+        } else {
+          await setOrders([]);
+        }
       } else {
         throw new Error(response.error);
       }

@@ -16,6 +16,19 @@ exports.getAll = async function(req,res,next){
         next(err)
     }
 }
+exports.delete = async function(req,res,next){
+    id = res.locals.userId;
+    let sql = 'UPDATE USER SET isDeleted = 1 WHERE id = ?';
+    let params = id;
+    console.log("delete");
+    connection.query(sql, params,
+        (err, rows, fields) => {
+            res.send(rows);
+            console.log(rows);
+        }
+    )
+}
+
 
 exports.update = async function(req,res,next){
     id = res.locals.userId;

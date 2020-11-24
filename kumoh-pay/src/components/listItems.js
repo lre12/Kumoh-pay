@@ -19,7 +19,7 @@ export const menuListItems = (
         <Link to="/present" style={{textDecoration: 'none', color: 'black'}}>
             <ListItem button>
                 <ListItemIcon><SearchIcon /></ListItemIcon>
-                <ListItemText primary="수여 내역 조회" />
+                <ListItemText primary="거래 내역 조회" />
             </ListItem>
         </Link>
         <Link to="/settlement" style={{textDecoration: 'none', color: 'black'}}>
@@ -28,7 +28,6 @@ export const menuListItems = (
                 <ListItemText primary="정산 조회" />
             </ListItem>
         </Link>
-        
+
     </div>
 );
-        

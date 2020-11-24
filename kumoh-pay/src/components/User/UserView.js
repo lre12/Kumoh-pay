@@ -110,12 +110,6 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       minWidth: 100
     },
-    button: {
-      textAlign: 'right',
-      '& > *': {
-        margin: theme.spacing(1),
-      },
-    },
 }));
 
 function descendingComparator(a, b, orderBy) {
@@ -149,27 +143,21 @@ const headCells = [
     { id: "name", label: "이름" },
     { id: "userGroup", label: "사용자분류" },
     { id: "permit", label: "판매허가" },
-    { id: "charge", label: "상품권 보유량" },
-    { id: "recentUseDate", label: "최근이용" },
+    { id: "recentUseDate", label: "생성일자" },
   ];
 
 export default function UserView({ userId, setPoint, setHasCookie }) {
   const classes = useStyles();
   const [data, setData] = useState([]);
-  const [voucher, setVoucher] = useState([]);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("id");
   const [page, setPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchKey, setSearchKey] = useState('id');
-  const [userGroups, setUserGroups] = useState("판매자");
+  const [userGroups, setUserGroups] = useState("전체");
   const [pageSize, setPageSize] = useState(25); // 페이지 당 갯수
   const [count, setCount] = useState(1); //총 페이지 수
   const [myIndex, setMyIndex] = useState(0);
-
-  useEffect (() => {
-    handleVoucher();
-  }, [])
 
   useEffect(() => {
     parseInt(data.length, 10) > 0 ?
@@ -192,29 +180,6 @@ export default function UserView({ userId, setPoint, setHasCookie }) {
 
   };
 
-  const handleVoucher = async () => {
-
-    try {
-      const getResponse = await walletGet("queryAllPoint", userId);
-      if(await Array.isArray(getResponse.data.result)){
-        await setVoucher(getResponse.data.result);
-      } else {
-        await setVoucher([]);
-      }
-      await console.log(voucher);
-    } catch(e) {
-
-    }
-  };
-
-  const isVoucher = (id) => {
-    for(var i = 0; i < voucher.length; i++) {
-      if (voucher[i].Owner == id) {
-        setMyIndex(i);
-        return true;
-      }
-    }
-  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -248,7 +213,7 @@ export default function UserView({ userId, setPoint, setHasCookie }) {
           >
             사용자 관리
           </Typography>
-        </Grid>
+          </Grid>
         <Grid item xs={12}
             align="center">
           <FormControl component="searchForm">
@@ -308,11 +273,6 @@ export default function UserView({ userId, setPoint, setHasCookie }) {
           </Grid>
         </div>
       <Paper className={classes.paper}>
-        <div className={classes.button}>
-        <Button variant="contained" color="primary" onClick={() => handleVoucher()}>
-          상품권 조회
-        </Button>
-        </div>
         <TableContainer>
           <Table
             className={classes.table}
@@ -336,10 +296,9 @@ export default function UserView({ userId, setPoint, setHasCookie }) {
                       <TableCell align="center">{user.name}</TableCell>
                       <TableCell align="center">{user.userGroup}</TableCell>
                       <TableCell align="center">{user.permit}</TableCell>
-                      <TableCell align="center">{isVoucher(user.id) ? voucher[myIndex].Amount : 0}</TableCell>
-                      <TableCell align="center">{user.recentUseDate}</TableCell>
-                      <TableCell><UserDetail setHasCookie = {setHasCookie} handleChangeData={handleChangeData} userId={userId} id={user.id} name={user.name} userGroup={user.userGroup} permit={user.permit} charge={user.charge}/></TableCell>
-                      <TableCell><UserDelete setHasCookie = {setHasCookie} handleChangeData={handleChangeData} id={user.id} name={user.name} charge={user.charge}/></TableCell>
+                      <TableCell align="center">{user.recentUseDate.substring(0,10)}</TableCell>
+                      <TableCell><UserDetail setHasCookie = {setHasCookie} userId={userId} id={user.id} name={user.name} userGroup={user.userGroup} permit={user.permit} btnInfo="상세" /></TableCell>
+                      <TableCell><UserDelete setHasCookie = {setHasCookie} handleChangeData={handleChangeData} id={user.id} name={user.name} /></TableCell>
                       <TableCell><VoucherSend setHasCookie = {setHasCookie} setPoint={setPoint} userId={userId} receiverId={user.id}/></TableCell>
                     </TableRow>
                   );

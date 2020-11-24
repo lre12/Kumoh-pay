@@ -56,8 +56,10 @@ const useStyles = makeStyles ((theme) => ({
   },
   button: {
     padding: theme.spacing(0.5),
-    marginRight: 15,
+    marginRight: 12,
+    marginTop: 5,
     textAlign: 'right',
+    width: '140px',
   },
   table: {
     padding: theme.spacing(2),
@@ -76,13 +78,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function UserDetailView(props, {setHasCookie}) {
   const classes = useStyles();
   const [data, setData] = useState([]);
+  const [point, setPoint] = useState(0);
   const [open, setOpen] = useState(false);
   const [isReceive, setIsReceive] = useState(false);
   let count = 0;
 
   const handleData = async () => {
     try {
-      await walletEnroll(props.id)
+      await walletEnroll(props.id);
       const getResponse = await walletGet("getHistory", props.id);
       await console.log([getResponse.data.result]);
       await console.log(Array.isArray(getResponse.data.result));
@@ -90,6 +93,7 @@ export default function UserDetailView(props, {setHasCookie}) {
         await setData(getResponse.data.result);
       } else {
         await setData([]);
+        await setPoint(0);
       }
       await console.log(data);
 
@@ -102,24 +106,39 @@ export default function UserDetailView(props, {setHasCookie}) {
     }
   }
 
+  const handleMyPoint = async () => {
+    await walletEnroll(props.id);
+    const getPoint = await walletGet("queryPoint", props.id);
+    await setPoint(getPoint.data.result.Amount);
+  }
 
-  const handleClickOpen = () => {
-    setOpen(true);
+
+  const handleClickOpen = async () => {
+    await setOpen(true);
+    await handleMyPoint();
+    await handleData();
   };
 
   const handleClose = async () => {
-
-    await walletGet("getHistory", props.userId);
+    await walletEnroll(props.userId);
     await setOpen(false);
-    await props.handleChangeData();
   };
 
   return (
     <div>
       <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        상세정보
-      </Button>
+        { props.btnInfo === "상세" ?
+          ( <Button onClick={handleClickOpen} variant="outlined" color="primary" >
+            {props.btnInfo}
+            </Button>
+          )
+          :
+          (<Button onClick={handleClickOpen} focus="right" color="inherit">
+              {props.btnInfo}
+            </Button>
+          )
+        }
+
       </div>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} >
       <AppBar className={classes.appBar}>
@@ -147,7 +166,7 @@ export default function UserDetailView(props, {setHasCookie}) {
               <TableCell>사용자분류:</TableCell>
               <TableCell>{props.userGroup}</TableCell>
               <TableCell>상품권보유량:</TableCell>
-              <TableCell>{props.charge}원</TableCell>
+              <TableCell>{point}원</TableCell>
             </TableRow>
           </Table>
           </Container>
@@ -159,11 +178,14 @@ export default function UserDetailView(props, {setHasCookie}) {
           justify="flex-end"
           alignItems="flex-end"
           >
-          <Grid className={classes.button}>
-            <UserGroupChange setHasCookie = {setHasCookie} id={props.id} userGroup={props.userGroup} permit={props.permit}/>
+          <Grid >
+            <UserGroupChange className={classes.button} setHasCookie = {setHasCookie} id={props.id} userGroup={props.userGroup} permit={props.permit}/>
           </Grid>
-          <Grid className={classes.button}>
-            <Button variant="contained" color="primary" onClick={() => handleData()}>거래 내역 조회</Button>
+          <Grid>
+            <Button className={classes.button} variant="contained" color="primary" onClick={() => handleMyPoint()}>상품권 보유량 갱신</Button>
+          </Grid>
+          <Grid>
+            <Button className={classes.button} variant="contained" color="primary" onClick={() => handleData()}>거래 내역 조회</Button>
           </Grid>
         </Grid>
       </Grid>

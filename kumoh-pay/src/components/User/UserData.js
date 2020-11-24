@@ -1,5 +1,7 @@
+import { post, get } from 'axios';
 
-export const handleDataAll = async (userGroups, setData) => {
+  // 유저 정보 목록 (전체)
+  export const handleDataAll = async (userGroups, setData) => {
     if(userGroups === "전체"){
       await fetch("/api/users/all")
     .then((response) => response.json())
@@ -24,6 +26,7 @@ export const handleDataAll = async (userGroups, setData) => {
     };
   };
 
+  // 유저 정보 목록 (검색)
   export const handleData = (userGroups, setData, searchKey, searchKeyword) => {
     if(userGroups === "전체"){
       handleAllSearch(setData, searchKey, searchKeyword);
@@ -75,4 +78,21 @@ export const handleDataAll = async (userGroups, setData) => {
       setData(data)
       )
 
+  }
+
+  // 유저 삭제
+  export const deleteUser = async (id) => {
+    const url = '/api/users/delete';
+    await post(url, {
+        id : id
+    });
+};
+
+  // 정산 유저 목록
+  export const handleCalcData = async (setData) => {
+    await fetch("/api/users/calc")
+    .then((response) => response.json())
+    .then((data) =>
+    setData(data)
+    ).catch(err => console.log(err));
   }

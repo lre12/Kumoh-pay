@@ -27,13 +27,14 @@ const App = () => {
     const [cookies, removeCookie] = useCookies(['user']);
     const [hasCookie, setHasCookie] = useState(false);
     const [point, setPoint] = useState('')
+    const [orders,setOrders] = useState([]);
     useEffect(() => {
         if (cookies.user && cookies.user !== 'undefined') {
             setHasCookie(true);
         }
     }, [cookies]);
-    if(!hasCookie){
-    // if(!hasCookie&&device_check()){
+    // if(!hasCookie){
+    if(!hasCookie&&device_check()){
         return(
             <BrowserRouter>
             <Redirect to="/login" />
@@ -46,6 +47,7 @@ const App = () => {
                                 {...routerProps}
                                 setPoint = {setPoint}
                                 setHasCookie={setHasCookie}
+                                setOrders={setOrders}
                             />
                         );
                     }}
@@ -60,8 +62,8 @@ const App = () => {
         )
         
     }
-    else{
-    // else if(device_check()){
+    // else{
+    else if(device_check()){
         return(
             <BrowserRouter>
             <Redirect to="/WebView" />
@@ -79,6 +81,8 @@ const App = () => {
                                     setHasCookie(false);
                                 }}
                                 setPoint = {setPoint}
+                                orders = {orders}
+                                setOrders = {setOrders}
                             />
                         );
                     }}
@@ -87,12 +91,12 @@ const App = () => {
             
         )
     }
-    // else{
-    //     return(
-    //         <div>
-    //             보안상의 이유로 PC로는 접속할 수 없습니다.
-    //         </div>
-    //     )
-    // }
+    else{
+        return(
+            <div>
+                보안상의 이유로 PC로는 접속할 수 없습니다.
+            </div>
+        )
+    }
 };
 export default withCookies(App);

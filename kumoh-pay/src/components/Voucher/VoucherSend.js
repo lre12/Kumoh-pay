@@ -27,11 +27,11 @@ const VoucherSend = ( { setHasCookie, setPoint, userId, receiverId } ) => {
     return (
         <div>
             <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
-                전달
+                전송
             </Button>
             <Dialog onClose={() => setOpen(false)} open={open}>
                 <DialogTitle>
-                    상품권 전달
+                    상품권 전송
                 </DialogTitle>
                 <DialogContent>
                     <TextField

@@ -27,7 +27,7 @@ import SendVoucherScanner from './SendVoucherScanner';
 import UserStore from '../stores/UserStore';
 
 
-const WebView = ({ setHasCookie,point, removeCookie, setPoint }, props) => {
+const WebView = ({ setHasCookie,point, removeCookie, setPoint, orders, setOrders }, props) => {
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [userGroup, setUserGroup] = useState(null);
@@ -55,7 +55,14 @@ const WebView = ({ setHasCookie,point, removeCookie, setPoint }, props) => {
           // setCharge(charge.result.amount);
           // console.log(charge)
           const getResponse = await userStore.walletGet("queryPoint", id);
-          await setPoint(getResponse.data.result.Amount)
+          await setPoint(getResponse.data.result.Amount);
+          const history = await userStore.walletGet("getHistory", id);
+          if(Array.isArray(history.data.result)){
+            await setOrders(history.data.result);
+            console.log(orders);
+          } else {
+            await setOrders([]);
+          }
         }
       } catch (err) {
         console.log(err);
@@ -67,11 +74,11 @@ const WebView = ({ setHasCookie,point, removeCookie, setPoint }, props) => {
     return () => {
       abortController.abort();
     }
-  }, [id, name, userGroup, setHasCookie, setPoint]);
+  }, [id, name, userGroup, setHasCookie, point]);
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [NotificationCnt, setCnt] = useState(0);
-  
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -137,7 +144,7 @@ const WebView = ({ setHasCookie,point, removeCookie, setPoint }, props) => {
             <Container maxWidth="lg" className={classes.container}>
               <Switch>
                 <Route path="/WebView">
-                  <MainView id={id} name={name} charge={point} userGroup={userGroup} />
+                  <MainView id={id} name={name} charge={point} userGroup={userGroup} orders={orders} setPoint={setPoint} setOrders={setOrders}/>
                 </Route>
                 <Route path="/update">
                   <UpdateInfoView setHasCookie={setHasCookie} point = {point}/>

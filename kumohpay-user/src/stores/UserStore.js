@@ -1,6 +1,7 @@
 import { action, observable } from 'mobx';
 import {createContext} from "react";
 import { post, get } from 'axios';
+import axios from 'axios';
 
 class UserStore{
 
@@ -44,6 +45,22 @@ class UserStore{
         .catch(err => reject(err));
     });
   };
+
+  @action
+  deleteUser = async (id) => {
+    const url = '/app/info/delete';
+    // await fetch(url, {
+    //     method: 'DELETE'
+    // });
+    let res;
+    await post(url,{
+      id : id
+    }).then(function(response){
+      res = response;
+      console.log(res);
+    })
+    return res;
+  }
 
   @action
   changeInfoApi = async (id, pwd)=>{

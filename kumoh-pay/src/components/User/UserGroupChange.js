@@ -26,6 +26,12 @@ const useStyles = makeStyles((theme) => ({
   formControlLabel: {
     marginTop: theme.spacing(1),
   },
+  button: {
+    padding: theme.spacing(0.5),
+    marginRight: 12,
+    width: '140px',
+    textAlign: 'right',
+  },
 }));
 
 export default function UserGroupChange(props,{setHasCookie}) {
@@ -68,8 +74,8 @@ export default function UserGroupChange(props,{setHasCookie}) {
         <div>
         <React.Fragment>
           { props.userGroup === "판매자" ?
-          <Button variant="contained" color="primary" onClick={handleClickOpen}>사용자 권한 변경</Button> :
-          <Button variant="contained" color="primary" onClick={handleClickOpen} disabled>사용자 권한 변경</Button>
+          <Button className={classes.button} variant="contained" color="primary" onClick={handleClickOpen}>사용자 권한 변경</Button> :
+          <Button className={classes.button} variant="contained" color="primary" onClick={handleClickOpen} disabled>사용자 권한 변경</Button>
           }
       <Dialog
         open={open}

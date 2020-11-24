@@ -5,18 +5,16 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Typography from '@material-ui/core/Typography';
+import { deleteUser } from './UserData'
 
 const UserDelete = (props,{setHasCookie}) => {
     const [open, setOpen] = useState(false);
 
-    const deleteUser = (id) => {
-        const url = '/api/users/' + id;
-        fetch(url, {
-            method: 'DELETE'
-        });
-        setOpen(false);
-        props.handleChangeData();
-    };
+    const handleDelete = async () => {
+        await deleteUser(props.id);
+        await setOpen(false);
+        await props.handleChangeData();
+    }
 
     return (
         <div>
@@ -31,16 +29,13 @@ const UserDelete = (props,{setHasCookie}) => {
                     <Typography align="center">
                         {props.name}
                     </Typography>
-                    <Typography align="center">
-                        상품권 보유량: {props.charge}
-                    </Typography>
                     <br/>
                     <Typography gutterBottom variant="body2">
                         해당 사용자를 삭제하시겠습니까?
                     </Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" color="primary" onClick={(e) => {deleteUser(props.id)}}>삭제</Button>
+                    <Button variant="contained" color="primary" onClick={(e) => {handleDelete()}}>삭제</Button>
                     <Button variant="outlined" color="primary" onClick={() => setOpen(false)}>닫기</Button>
                 </DialogActions>
             </Dialog>
