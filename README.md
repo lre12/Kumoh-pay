@@ -46,37 +46,58 @@ HyperLedger 블록체인을 이용한 교내 상품권 전산화 프로젝트
 ## 사용자 기능
 - 로그인
 ![](https://images.velog.io/images/lre12/post/76e7c7fc-fa2c-4760-84a9-476869439b5a/user_login.png)
+
 학번과 비밀번호를 입력한다.
 비밀번호 찾기 미구현
+
 - 회원 가입
 ![](https://images.velog.io/images/lre12/post/d79deea3-ab08-4c1b-ad68-df992b2904f2/user_signup.png)
+
 금오 웹메일에 메일을 보내 인증번호를 받아 가입한다.
 실제 서비스를 하게 된다면, 아마 학교 계정 정보를 받아 연동해야 할 듯
+
 - 회원 정보 수정
 ![](https://images.velog.io/images/lre12/post/b73b3e60-d84c-4d08-b508-469c1b459420/user_info.png)
+
 회원 정보, 현재는 비밀번호만 수정할 수 있다.
+
 - 메인 화면
 ![](https://images.velog.io/images/lre12/post/93cfa20f-fa29-49ee-819e-61685962ff32/user_main.png)
+
 현재 계좌와 거래 내역을 보여준다.
 직접 개인 리눅스 서버(AWS 프리티어 수준)으로 서버를 돌려 블록체인 api 서버에서 오류가 많이 발생했다.
 당시 대처 방법이 없어서 새로고침 버튼을 넣어 해당 컴포넌트에 들어갈 state만 재요청했다.
+
 - 상품권 수령
 ![](https://images.velog.io/images/lre12/post/b1e61f34-55ee-46c9-912d-84a12fcf7075/user_my_QR.png)
+
 QR코드로 상품권을 받을 회원의 정보를 전달한다.
+
 - 상품권 전송
 ![](https://images.velog.io/images/lre12/post/e56f7679-1417-497f-a602-5afbb31f29d6/user_QR.png)
+
 HTML5 카메라를 이용하는 QR scanner를 이용해서 QR코드를 인식한다.
+
 ![](https://images.velog.io/images/lre12/post/2cad5e88-b785-415d-af89-108527383e1c/user_send_voucher.png)
+
 정보를 가져와서 보낼 금액을 입력한다.
+
 ## Kit-Pay 관리자 기능 소개
+
 - 로그인
+
 ![](https://images.velog.io/images/lre12/post/f88f959f-8893-4804-b1cf-983b50d59412/admin_login.png)
+
 - 회원 관리
+
 ![](https://images.velog.io/images/lre12/post/7338ba2a-da90-48ff-9ef2-3f2388f563a4/admin_user_view.png)
+
 관리자는 전자 상품권을 발급, 삭제할 수 있다.
 해당 사이트에서는 사용자를 삭제하고, 특정 사용자에게 상품권을 전달할 수 있다.
 ![](https://images.velog.io/images/lre12/post/9cb406ad-5279-47ee-8044-f65c59e5221e/admin_user_detail_admin.png)
+
 상세 정보를 클릭하면 다음과 같이 사용자의 상세 정보를 보여준다.
+
 - 거래 내역 조회
 ![](https://images.velog.io/images/lre12/post/4c5b4111-b1de-4b8e-bcd1-d08babea4fa1/admin_deal_check_all.png)
 
@@ -85,6 +106,7 @@ HTML5 카메라를 이용하는 QR scanner를 이용해서 QR코드를 인식한
 
 - 정산 조회
 ![](https://images.velog.io/images/lre12/post/5879e754-f37b-4bed-83b8-c454075f76bb/admin_calculate_view.png)
+
 교내 판매자가 마감 후 상품권으로 거래한 금액을 정산받기 위한 페이지이다.
 판매자의 지갑에서 금액을 빼낸 후 현금으로 교환한다.
 은행 모듈을 구현하지는 못하였다.
